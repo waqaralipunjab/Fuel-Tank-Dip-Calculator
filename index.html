@@ -1,1 +1,97 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><title>Fuel</title></head><body><h2>Al Mukhtar Petroleum</h2><h3>50-KL</h3><input id=t50 oninput="calc('t50',tank50,'r50')"><div id=r50>0.00 L</div><h3>25-KL</h3><input id=t25 oninput="calc('t25',tank25,'r25')"><div id=r25>0.00 L</div><script src=tank50.js></script><script src=tank25.js></script><script src=script.js></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Al Mukhtar Petroleum — Dip Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-head">
+  <div class="plate">
+    <span class="plate-eyebrow">Dip Reading → Litres</span>
+    <h1>Al Mukhtar Petroleum</h1>
+  </div>
+</header>
+
+<main class="tanks">
+
+  <section class="tank-card" data-tank="t50">
+    <div class="tank-card-head">
+      <span class="tank-chip">50-KL</span>
+      <span class="tank-capacity">cap. 49,855&nbsp;L</span>
+    </div>
+
+    <div class="tank-body">
+      <div class="gauge" aria-hidden="true">
+        <div class="gauge-tube">
+          <div class="gauge-fill" id="g50"></div>
+          <div class="gauge-ticks"></div>
+        </div>
+      </div>
+
+      <div class="tank-controls">
+        <label class="field">
+          <span class="field-label">Dip reading</span>
+          <span class="field-input-wrap">
+            <input id="t50" inputmode="decimal" autocomplete="off" placeholder="0" oninput="calc('t50',tank50,'r50')">
+            <span class="field-suffix">mm</span>
+          </span>
+        </label>
+
+        <div class="readout">
+          <span class="readout-label">Volume</span>
+          <div id="r50" class="readout-value">0.00 L</div>
+          <span id="p50" class="readout-pct">0% full</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tank-card" data-tank="t25">
+    <div class="tank-card-head">
+      <span class="tank-chip">25-KL</span>
+      <span class="tank-capacity">cap. 23,950&nbsp;L</span>
+    </div>
+
+    <div class="tank-body">
+      <div class="gauge" aria-hidden="true">
+        <div class="gauge-tube">
+          <div class="gauge-fill" id="g25"></div>
+          <div class="gauge-ticks"></div>
+        </div>
+      </div>
+
+      <div class="tank-controls">
+        <label class="field">
+          <span class="field-label">Dip reading</span>
+          <span class="field-input-wrap">
+            <input id="t25" inputmode="decimal" autocomplete="off" placeholder="0" oninput="calc('t25',tank25,'r25')">
+            <span class="field-suffix">mm</span>
+          </span>
+        </label>
+
+        <div class="readout">
+          <span class="readout-label">Volume</span>
+          <div id="r25" class="readout-value">0.00 L</div>
+          <span id="p25" class="readout-pct">0% full</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <span>Readings are linearly interpolated from calibration charts. Verify manually before dispatch.</span>
+</footer>
+
+<script src="tank50.js"></script>
+<script src="tank25.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
