@@ -17,6 +17,9 @@
 
 <header class="site-head">
   <div class="plate">
+    <button type="button" class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark/light theme">
+      <span id="themeIcon">🌙</span>
+    </button>
     <span class="plate-eyebrow">Dip Reading → Litres</span>
     <h1>Al Mukhtar Petroleum</h1>
     <div class="plate-clock" id="clock">—</div>
@@ -54,7 +57,10 @@
           <span id="p50" class="readout-pct">0% full</span>
         </div>
 
-        <button type="button" class="save-btn" onclick="saveReading('t50','50-KL')">💾 Save reading</button>
+        <div class="btn-row">
+          <button type="button" class="save-btn" onclick="saveReading('t50','50-KL')">💾 Save reading</button>
+          <button type="button" class="clear-btn" onclick="clearInput('t50',tank50,'r50')">✕ Clear</button>
+        </div>
       </div>
     </div>
   </section>
@@ -88,7 +94,10 @@
           <span id="p25" class="readout-pct">0% full</span>
         </div>
 
-        <button type="button" class="save-btn" onclick="saveReading('t25','25-KL')">💾 Save reading</button>
+        <div class="btn-row">
+          <button type="button" class="save-btn" onclick="saveReading('t25','25-KL')">💾 Save reading</button>
+          <button type="button" class="clear-btn" onclick="clearInput('t25',tank25,'r25')">✕ Clear</button>
+        </div>
       </div>
     </div>
   </section>
@@ -107,6 +116,16 @@
 
 <footer class="site-foot">
   <span>Readings are linearly interpolated from calibration charts. Verify manually before dispatch.</span>
+
+  <div class="dev-info">
+    <span class="dev-version">App v1.3</span>
+    <span class="dev-sep">•</span>
+    <span class="dev-name">Developed by Waqar Ali Punjab</span>
+    <span class="dev-sep">•</span>
+    <a href="mailto:Waqarali.punjab@gmail.com" class="dev-link">Waqarali.punjab@gmail.com</a>
+    <span class="dev-sep">•</span>
+    <a href="tel:+923009630013" class="dev-link">0300-9630013</a>
+  </div>
 </footer>
 
 <script src="tank50.js"></script>

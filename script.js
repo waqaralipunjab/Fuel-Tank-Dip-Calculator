@@ -34,6 +34,14 @@ function calc(id,data,res){
   if(pctEl) pctEl.innerText=pct.toFixed(0)+'% full';
 }
 
+/* ---------- Clear a single tank's input ---------- */
+function clearInput(inputId,data,res){
+  const input=document.getElementById(inputId);
+  input.value='';
+  input.focus();
+  calc(inputId,data,res);
+}
+
 /* ---------- Live clock ---------- */
 function tickClock(){
   const el=document.getElementById('clock');
@@ -115,3 +123,25 @@ function renderHistory(){
 }
 
 renderHistory();
+
+/* ---------- Theme toggle ---------- */
+const THEME_KEY='fuelDipTheme';
+
+function applyTheme(theme){
+  document.body.classList.toggle('light-theme',theme==='light');
+  const icon=document.getElementById('themeIcon');
+  if(icon) icon.innerText=theme==='light'?'☀️':'🌙';
+}
+
+function toggleTheme(){
+  const isLight=document.body.classList.contains('light-theme');
+  const next=isLight?'dark':'light';
+  applyTheme(next);
+  try{ localStorage.setItem(THEME_KEY,next); }catch(e){}
+}
+
+(function initTheme(){
+  let saved='dark';
+  try{ saved=localStorage.getItem(THEME_KEY)||'dark'; }catch(e){}
+  applyTheme(saved);
+})();
