@@ -260,6 +260,116 @@ body{
   color: var(--text-muted);
 }
 
+/* ---------- Clock ---------- */
+.plate-clock{
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: .04em;
+}
+
+/* ---------- Save button ---------- */
+.save-btn{
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease;
+}
+
+.save-btn:hover{
+  border-color: var(--amber);
+  background: rgba(242,169,59,.08);
+}
+
+.save-btn:active{
+  background: rgba(242,169,59,.16);
+}
+
+/* ---------- History ---------- */
+.history{
+  width: 100%;
+  max-width: 880px;
+  margin-top: 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+
+.history-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.history-title{
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+
+.history-clear{
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.history-clear:hover{ color: var(--red); }
+
+.history-list{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.history-empty{
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 10px 0;
+}
+
+.history-row{
+  display: grid;
+  grid-template-columns: 64px 1fr 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  background: #0c0e13;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.history-tank{ color: var(--amber); font-weight: 700; }
+.history-dip{ color: var(--text-muted); }
+.history-vol{ color: var(--text); font-weight: 500; }
+.history-time{ color: var(--text-muted); text-align: right; white-space: nowrap; }
+
+@media (max-width: 520px){
+  .history-row{
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+  }
+  .history-time{ text-align: left; }
+}
+
 /* ---------- Footer ---------- */
 .site-foot{
   width: 100%;
