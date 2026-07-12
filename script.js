@@ -1,0 +1,2 @@
+function interp(data,v){for(let i=0;i<data.length-1;i++){let a=data[i],b=data[i+1];if(v==a[0])return a[1];if(v>=a[0]&&v<=b[0])return a[1]+(v-a[0])*(b[1]-a[1])/(b[0]-a[0]);}return null;}
+function calc(id,data,res){let v=parseFloat(document.getElementById(id).value);let r=document.getElementById(res);if(isNaN(v)){r.innerText='0.00 L';return;}let x=interp(data,v);r.innerText=x==null?'Out of Range':x.toFixed(1)+' L';}
