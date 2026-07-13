@@ -464,31 +464,75 @@ body.light-theme .history-row{
   text-align: center;
 }
 
-.dev-info{
-  margin-top: 14px;
-  padding-top: 14px;
+.dev-panel{
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  padding: 22px 20px;
+}
+
+.dev-brand{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.dev-logo{
+  width: 26px;
+  height: 26px;
+  color: var(--amber);
+  flex: 0 0 auto;
+}
+
+.dev-company{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.dev-company em{
+  font-style: normal;
+  color: var(--amber);
+}
+
+.dev-sub{
+  margin-top: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.dev-contact{
+  margin-top: 16px;
+  padding-top: 16px;
   border-top: 1px dashed var(--line);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 22px;
   font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-muted);
+  font-size: 12px;
 }
-
-.dev-version{
-  color: var(--amber);
-  font-weight: 500;
-}
-
-.dev-sep{ opacity: .5; }
 
 .dev-link{
   color: var(--text-muted);
   text-decoration: none;
   border-bottom: 1px dotted var(--line);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dev-icon{
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
 }
 
 .dev-link:hover{
@@ -497,6 +541,5 @@ body.light-theme .history-row{
 }
 
 @media (max-width: 480px){
-  .dev-info{ flex-direction: column; gap: 4px; }
-  .dev-sep{ display: none; }
+  .dev-contact{ flex-direction: column; gap: 10px; }
 }
