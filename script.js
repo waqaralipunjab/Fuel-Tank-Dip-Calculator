@@ -5,8 +5,11 @@ function calc(id,data,res){
   const r=document.getElementById(res);
   const gaugeId='g'+id.slice(1);
   const pctId='p'+id.slice(1);
+  const remId='rem'+id.slice(1);
   const gauge=document.getElementById(gaugeId);
   const pctEl=document.getElementById(pctId);
+  const remEl=document.getElementById(remId);
+  const readout=document.getElementById('readout'+id.slice(1));
   const maxLitres=data[data.length-1][1];
 
   r.classList.remove('is-error');
@@ -15,6 +18,8 @@ function calc(id,data,res){
     r.innerText='0.00 L';
     if(gauge) gauge.style.height='0%';
     if(pctEl) pctEl.innerText='0% full';
+    if(remEl) remEl.innerText='Rem. '+maxLitres.toLocaleString()+' L';
+    if(readout) readout.classList.remove('has-value');
     return;
   }
 
@@ -25,6 +30,8 @@ function calc(id,data,res){
     r.classList.add('is-error');
     if(gauge) gauge.style.height='0%';
     if(pctEl) pctEl.innerText='check reading';
+    if(remEl) remEl.innerText='Rem. —';
+    if(readout) readout.classList.remove('has-value');
     return;
   }
 
@@ -32,6 +39,16 @@ function calc(id,data,res){
   const pct=Math.max(0,Math.min(100,(x/maxLitres)*100));
   if(gauge) gauge.style.height=pct.toFixed(1)+'%';
   if(pctEl) pctEl.innerText=pct.toFixed(0)+'% full';
+  if(remEl){
+    const remaining=Math.max(0,maxLitres-x);
+    remEl.innerText='Rem. '+remaining.toLocaleString(undefined,{maximumFractionDigits:0})+' L';
+  }
+
+  if(readout){
+    readout.classList.remove('has-value');
+    void readout.offsetWidth; /* restart pop animation */
+    readout.classList.add('has-value');
+  }
 }
 
 /* ---------- Clear a single tank's input ---------- */
@@ -128,6 +145,28 @@ function renderHistory(){
 
 renderHistory();
 
+/* ---------- Share or download helper ---------- */
+async function shareOrDownloadBlob(blob,filename,mime){
+  try{
+    if(navigator.canShare && navigator.share){
+      const file=new File([blob],filename,{type:mime});
+      if(navigator.canShare({files:[file]})){
+        await navigator.share({files:[file],title:filename});
+        return;
+      }
+    }
+  }catch(e){ /* user cancelled or share unsupported — fall back to download */ }
+
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 /* ---------- Export CSV ---------- */
 function csvEscape(val){
   const s=String(val==null?'':val);
@@ -149,15 +188,73 @@ function exportHistoryCSV(){
 
   const csvContent=rows.map(r=>r.map(csvEscape).join(',')).join('\r\n');
   const blob=new Blob(['\ufeff'+csvContent],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
   const stamp=new Date().toISOString().slice(0,10);
-  a.href=url;
-  a.download='fuel-dip-history-'+stamp+'.csv';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  shareOrDownloadBlob(blob,'fuel-dip-history-'+stamp+'.csv','text/csv');
+}
+
+/* ---------- Export PDF ---------- */
+function exportHistoryPDF(){
+  const list=loadHistory();
+  if(list.length===0){
+    alert('No readings saved yet — nothing to export.');
+    return;
+  }
+  if(!window.jspdf || !window.jspdf.jsPDF){
+    alert('PDF export needs an internet connection to load the first time. Please check your connection and try again.');
+    return;
+  }
+
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+
+  doc.setFontSize(16);
+  doc.setTextColor(37,99,235);
+  doc.text('Al Mukhtar Petroleum',14,18);
+  doc.setFontSize(11);
+  doc.setTextColor(100,100,100);
+  doc.text('Fuel Dip Reading Report',14,25);
+  doc.setFontSize(9);
+  doc.text('Generated: '+new Date().toLocaleString(),14,31);
+
+  const rows=list.map(e=>[e.tank,e.dip+' mm',e.volume,e.day||'',e.time]);
+
+  doc.autoTable({
+    startY:36,
+    head:[['Tank','Dip','Volume','Day','Date & Time']],
+    body:rows,
+    headStyles:{fillColor:[37,99,235]},
+    styles:{fontSize:9}
+  });
+
+  const stamp=new Date().toISOString().slice(0,10);
+  const blob=doc.output('blob');
+  shareOrDownloadBlob(blob,'fuel-dip-history-'+stamp+'.pdf','application/pdf');
+}
+
+/* ---------- Export Excel ---------- */
+function exportHistoryExcel(){
+  const list=loadHistory();
+  if(list.length===0){
+    alert('No readings saved yet — nothing to export.');
+    return;
+  }
+  if(!window.XLSX){
+    alert('Excel export needs an internet connection to load the first time. Please check your connection and try again.');
+    return;
+  }
+
+  const rows=[['Tank','Dip (mm)','Volume','Day','Date & Time']];
+  list.forEach(e=>rows.push([e.tank,e.dip,e.volume,e.day||'',e.time]));
+
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:10},{wch:10},{wch:14},{wch:8},{wch:20}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Dip History');
+
+  const stamp=new Date().toISOString().slice(0,10);
+  const wbout=XLSX.write(wb,{bookType:'xlsx',type:'array'});
+  const blob=new Blob([wbout],{type:'application/octet-stream'});
+  shareOrDownloadBlob(blob,'fuel-dip-history-'+stamp+'.xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 }
 
 /* ---------- WhatsApp share ---------- */
@@ -184,21 +281,21 @@ function shareHistoryWhatsApp(){
 const THEME_KEY='fuelDipTheme';
 
 function applyTheme(theme){
-  document.body.classList.toggle('light-theme',theme==='light');
+  document.body.classList.toggle('dark-theme',theme==='dark');
   const icon=document.getElementById('themeIcon');
-  if(icon) icon.innerText=theme==='light'?'☀️':'🌙';
+  if(icon) icon.innerText=theme==='dark'?'🌙':'☀️';
 }
 
 function toggleTheme(){
-  const isLight=document.body.classList.contains('light-theme');
-  const next=isLight?'dark':'light';
+  const isDark=document.body.classList.contains('dark-theme');
+  const next=isDark?'light':'dark';
   applyTheme(next);
   try{ localStorage.setItem(THEME_KEY,next); }catch(e){}
 }
 
 (function initTheme(){
-  let saved='dark';
-  try{ saved=localStorage.getItem(THEME_KEY)||'dark'; }catch(e){}
+  let saved='light';
+  try{ saved=localStorage.getItem(THEME_KEY)||'light'; }catch(e){}
   applyTheme(saved);
 })();
 
@@ -325,3 +422,15 @@ function savePin(){
 }
 
 checkLockOnLoad();
+
+/* ---------- Bottom nav ---------- */
+(function initBottomNav(){
+  const items=document.querySelectorAll('.bottom-nav .nav-item[data-nav]');
+  if(!items.length) return;
+  items.forEach(function(item){
+    item.addEventListener('click',function(){
+      items.forEach(function(i){ i.classList.remove('is-active'); });
+      item.classList.add('is-active');
+    });
+  });
+})();
