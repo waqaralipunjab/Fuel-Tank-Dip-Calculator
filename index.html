@@ -15,11 +15,63 @@
 </head>
 <body>
 
+<!-- ===== PIN LOCK SCREEN ===== -->
+<div id="lockScreen" class="lock-overlay" style="display:none;">
+  <div class="lock-card">
+    <div class="lock-icon">🔒</div>
+    <h2>Enter PIN</h2>
+    <p class="lock-sub">This app is protected. Enter PIN to continue.</p>
+    <input id="lockInput" class="lock-input" type="password" inputmode="numeric" autocomplete="off" placeholder="••••">
+    <div id="lockError" class="lock-error"></div>
+    <button type="button" class="cta-btn" onclick="attemptUnlock()">Unlock</button>
+  </div>
+</div>
+
+<!-- ===== SETTINGS MODAL ===== -->
+<div id="settingsModal" class="modal-overlay" style="display:none;" onclick="closeSettingsOnBg(event)">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2>App Settings</h2>
+      <button type="button" class="modal-close" onclick="closeSettings()">✕</button>
+    </div>
+
+    <div class="modal-row">
+      <div>
+        <div class="modal-row-title">PIN Lock</div>
+        <div class="modal-row-sub">Require a PIN to open this app</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="pinEnabledToggle" onchange="togglePinEnabled()">
+        <span class="switch-track"></span>
+      </label>
+    </div>
+
+    <div id="pinSetupBlock" class="pin-setup">
+      <label class="field">
+        <span class="field-label">New PIN</span>
+        <input id="newPin" class="settings-input" type="password" inputmode="numeric" autocomplete="off" placeholder="Enter any length PIN">
+      </label>
+      <label class="field">
+        <span class="field-label">Confirm PIN</span>
+        <input id="confirmPin" class="settings-input" type="password" inputmode="numeric" autocomplete="off" placeholder="Re-enter PIN">
+      </label>
+      <div id="pinSetupMsg" class="pin-setup-msg"></div>
+      <button type="button" class="save-btn" onclick="savePin()">Save PIN</button>
+    </div>
+  </div>
+</div>
+
+<div id="appContent">
 <header class="site-head">
   <div class="plate">
-    <button type="button" class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark/light theme">
-      <span id="themeIcon">🌙</span>
-    </button>
+    <div class="plate-actions">
+      <button type="button" class="icon-btn" id="settingsToggle" onclick="openSettings()" aria-label="App settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </button>
+      <button type="button" class="icon-btn" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark/light theme">
+        <span id="themeIcon">🌙</span>
+      </button>
+    </div>
     <span class="plate-eyebrow">Dip Reading → Litres</span>
     <h1>Al Mukhtar Petroleum</h1>
     <div class="plate-clock" id="clock">—</div>
@@ -107,7 +159,11 @@
 <section class="history">
   <div class="history-head">
     <span class="history-title">💾 Reading History</span>
-    <button type="button" class="history-clear" onclick="clearHistory()">Clear</button>
+    <div class="history-actions">
+      <button type="button" class="history-export" onclick="exportHistoryCSV()">⬇️ Export CSV</button>
+      <button type="button" class="history-whatsapp" onclick="shareHistoryWhatsApp()">📤 WhatsApp</button>
+      <button type="button" class="history-clear" onclick="clearHistory()">Clear</button>
+    </div>
   </div>
   <div id="historyList" class="history-list">
     <div class="history-empty">No readings saved yet.</div>
@@ -123,7 +179,7 @@
       <span class="dev-company">Digital <em>Dip</em> Solutions</span>
     </div>
 
-    <div class="dev-sub">Developed by Waqar Ali Punjab &nbsp;•&nbsp; App v1.3</div>
+    <div class="dev-sub">Developed by Waqar Ali Punjab &nbsp;•&nbsp; App v1.4</div>
 
     <div class="dev-contact">
       <a href="mailto:Waqarali.punjab@gmail.com" class="dev-link">
@@ -137,6 +193,8 @@
     </div>
   </div>
 </footer>
+
+</div>
 
 <script src="tank50.js"></script>
 <script src="tank25.js"></script>
