@@ -43,6 +43,17 @@
 
     <div class="modal-row">
       <div>
+        <div class="modal-row-title">🌙 Dark Mode</div>
+        <div class="modal-row-sub">Switch between light and dark appearance</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="darkModeToggle" onchange="onSettingsThemeToggle(this.checked)">
+        <span class="switch-track"></span>
+      </label>
+    </div>
+
+    <div class="modal-row">
+      <div>
         <div class="modal-row-title">🔒 PIN Lock</div>
         <div class="modal-row-sub">Require a PIN to open this app</div>
       </div>
@@ -70,15 +81,6 @@
 <div id="appContent">
 <header class="site-head" id="navHome">
   <div class="plate">
-    <div class="plate-actions">
-      <button type="button" class="icon-btn" id="settingsToggle" onclick="openSettings()" aria-label="App settings">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-      </button>
-      <button type="button" class="icon-btn" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark/light theme">
-        <span id="themeIcon">☀️</span>
-      </button>
-    </div>
-
     <div class="plate-badge">🛢 Fuel Management System</div>
     <h1 class="customer-name">Al Mukhtar Petroleum</h1>
     <p class="plate-tagline">Fuel Dip Calculator</p>

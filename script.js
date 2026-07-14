@@ -277,18 +277,17 @@ function shareHistoryWhatsApp(){
   window.open(url,'_blank','noopener');
 }
 
-/* ---------- Theme toggle ---------- */
+/* ---------- Theme toggle (controlled from Settings) ---------- */
 const THEME_KEY='fuelDipTheme';
 
 function applyTheme(theme){
   document.body.classList.toggle('dark-theme',theme==='dark');
-  const icon=document.getElementById('themeIcon');
-  if(icon) icon.innerText=theme==='dark'?'🌙':'☀️';
+  const toggle=document.getElementById('darkModeToggle');
+  if(toggle) toggle.checked=(theme==='dark');
 }
 
-function toggleTheme(){
-  const isDark=document.body.classList.contains('dark-theme');
-  const next=isDark?'light':'dark';
+function onSettingsThemeToggle(checked){
+  const next=checked?'dark':'light';
   applyTheme(next);
   try{ localStorage.setItem(THEME_KEY,next); }catch(e){}
 }
@@ -361,6 +360,10 @@ function openSettings(){
   document.getElementById('pinSetupMsg').innerText='';
   document.getElementById('newPin').value='';
   document.getElementById('confirmPin').value='';
+
+  const darkToggle=document.getElementById('darkModeToggle');
+  if(darkToggle) darkToggle.checked=document.body.classList.contains('dark-theme');
+
   modal.style.display='flex';
 }
 
