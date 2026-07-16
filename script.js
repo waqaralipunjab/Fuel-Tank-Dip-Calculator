@@ -126,6 +126,9 @@ function saveReading(inputId,tankLabel){
 }
 
 function clearHistory(){
+  const list=loadHistory();
+  if(list.length===0) return;
+  if(!confirm('Clear all '+list.length+' saved readings?\n\nThis cannot be undone.')) return;
   persistHistory([]);
   renderHistory();
 }
