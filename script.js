@@ -1,5 +1,9 @@
 function interp(data,v){for(let i=0;i<data.length-1;i++){let a=data[i],b=data[i+1];if(v==a[0])return a[1];if(v>=a[0]&&v<=b[0])return a[1]+(v-a[0])*(b[1]-a[1])/(b[0]-a[0]);}return null;}
 
+function formatLiters(x){
+  return x.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})+' L';
+}
+
 function calc(id,data,res){
   const v=parseFloat(document.getElementById(id).value);
   const r=document.getElementById(res);
@@ -15,10 +19,10 @@ function calc(id,data,res){
   r.classList.remove('is-error');
 
   if(isNaN(v)){
-    r.innerText='0.00 L';
+    r.innerText=formatLiters(0);
     if(gauge) gauge.style.height='0%';
     if(pctEl) pctEl.innerText='0% full';
-    if(remEl) remEl.innerText='Rem. '+maxLitres.toLocaleString()+' L';
+    if(remEl) remEl.innerText='Rem. '+maxLitres.toLocaleString('en-US')+' L';
     if(readout) readout.classList.remove('has-value');
     return;
   }
@@ -35,13 +39,13 @@ function calc(id,data,res){
     return;
   }
 
-  r.innerText=x.toFixed(1)+' L';
+  r.innerText=formatLiters(x);
   const pct=Math.max(0,Math.min(100,(x/maxLitres)*100));
   if(gauge) gauge.style.height=pct.toFixed(1)+'%';
   if(pctEl) pctEl.innerText=pct.toFixed(0)+'% full';
   if(remEl){
     const remaining=Math.max(0,maxLitres-x);
-    remEl.innerText='Rem. '+remaining.toLocaleString(undefined,{maximumFractionDigits:0})+' L';
+    remEl.innerText='Rem. '+remaining.toLocaleString('en-US',{maximumFractionDigits:0})+' L';
   }
 
   if(readout){
