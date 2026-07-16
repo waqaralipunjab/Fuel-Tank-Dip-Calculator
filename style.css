@@ -381,6 +381,15 @@ body{
   pointer-events: none;
 }
 
+.field-input-wrap input.note-input{
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  padding: 11px 14px;
+}
+
+.field-input-wrap input.note-input::placeholder{ font-size: 13px; }
+
 /* ---------- Result highlight card ---------- */
 .readout{
   background: rgba(34,197,94,.08);
@@ -610,7 +619,7 @@ body{
 
 .history-row{
   display: grid;
-  grid-template-columns: 74px 1fr 1fr auto;
+  grid-template-columns: 74px 1fr 1fr auto auto;
   gap: 10px;
   align-items: center;
   padding: 10px 14px;
@@ -629,12 +638,65 @@ body{
 .history-vol{ color: var(--text); font-weight: 600; }
 .history-time{ color: var(--text-muted); text-align: right; white-space: nowrap; }
 
+.history-delete{
+  background: rgba(239,68,68,.06);
+  border: 1.5px solid var(--glass-border);
+  color: var(--text-muted);
+  width: 26px;
+  height: 26px;
+  line-height: 1;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0;
+  transition: border-color .15s ease, color .15s ease, background .15s ease, transform .15s ease;
+}
+
+.history-delete:hover{
+  border-color: var(--error);
+  color: var(--error);
+  background: rgba(239,68,68,.14);
+  transform: translateY(-1px);
+}
+
+.history-delete:active{ transform: translateY(0) scale(.9); }
+
+body.dark-theme .history-delete{
+  background: rgba(239,68,68,.1);
+}
+
+.history-row.has-note{
+  grid-template-rows: auto auto;
+}
+
+.history-note{
+  grid-column: 1 / -1;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: rgba(37,99,235,.06);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-top: 2px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+body.dark-theme .history-note{
+  background: rgba(96,165,250,.1);
+}
+
 @media (max-width: 520px){
   .history-row{
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr auto;
     grid-template-rows: auto auto;
   }
   .history-time{ text-align: left; }
+  .history-delete{ grid-row: 1 / span 2; align-self: center; justify-self: end; }
+  .history-row.has-note{ grid-template-rows: auto auto auto; }
 }
 
 /* ---------- Lock screen ---------- */

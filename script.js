@@ -93,6 +93,7 @@ function persistHistory(list){
 function saveReading(inputId,tankLabel){
   const input=document.getElementById(inputId);
   const resultEl=document.getElementById('r'+inputId.slice(1));
+  const noteInput=document.getElementById('note'+inputId.slice(1));
   const dip=input.value;
   const volumeText=resultEl.innerText;
 
@@ -107,6 +108,7 @@ function saveReading(inputId,tankLabel){
     tank:tankLabel,
     dip:parseFloat(dip),
     volume:volumeText,
+    note:noteInput?noteInput.value.trim():'',
     day:now.toLocaleDateString(undefined,{weekday:'short'}),
     time:now.toLocaleString(undefined,{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})
   };
@@ -115,12 +117,30 @@ function saveReading(inputId,tankLabel){
   list.unshift(entry);
   if(list.length>HISTORY_LIMIT) list.length=HISTORY_LIMIT;
   persistHistory(list);
+  if(noteInput) noteInput.value='';
   renderHistory();
 }
 
 function clearHistory(){
   persistHistory([]);
   renderHistory();
+}
+
+function deleteReading(index){
+  const list=loadHistory();
+  if(index<0||index>=list.length) return;
+  const e=list[index];
+  const label=e.tank+' — '+e.dip+'mm ('+(e.day?e.day+', ':'')+e.time+')'+(e.note?'\nNote: '+e.note:'');
+  if(!confirm('Delete this reading?\n\n'+label)) return;
+  list.splice(index,1);
+  persistHistory(list);
+  renderHistory();
+}
+
+function escapeHtml(str){
+  return String(str==null?'':str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 function renderHistory(){
@@ -133,12 +153,14 @@ function renderHistory(){
     return;
   }
 
-  container.innerHTML=list.map(e=>
-    '<div class="history-row">'+
+  container.innerHTML=list.map((e,i)=>
+    '<div class="history-row'+(e.note?' has-note':'')+'">'+
       '<span class="history-tank">'+e.tank+'</span>'+
       '<span class="history-dip">'+e.dip+' mm</span>'+
       '<span class="history-vol">'+e.volume+'</span>'+
       '<span class="history-time">'+(e.day?e.day+', ':'')+e.time+'</span>'+
+      '<button type="button" class="history-delete" onclick="deleteReading('+i+')" aria-label="Delete this reading">✕</button>'+
+      (e.note?'<span class="history-note">📝 '+escapeHtml(e.note)+'</span>':'')+
     '</div>'
   ).join('');
 }
@@ -181,9 +203,9 @@ function exportHistoryCSV(){
     return;
   }
 
-  const rows=[['Tank','Dip (mm)','Volume','Day','Date & Time']];
+  const rows=[['Tank','Dip (mm)','Volume','Day','Date & Time','Note']];
   list.forEach(e=>{
-    rows.push([e.tank,e.dip,e.volume,e.day||'',e.time]);
+    rows.push([e.tank,e.dip,e.volume,e.day||'',e.time,e.note||'']);
   });
 
   const csvContent=rows.map(r=>r.map(csvEscape).join(',')).join('\r\n');
@@ -216,11 +238,11 @@ function exportHistoryPDF(){
   doc.setFontSize(9);
   doc.text('Generated: '+new Date().toLocaleString(),14,31);
 
-  const rows=list.map(e=>[e.tank,e.dip+' mm',e.volume,e.day||'',e.time]);
+  const rows=list.map(e=>[e.tank,e.dip+' mm',e.volume,e.day||'',e.time,e.note||'']);
 
   doc.autoTable({
     startY:36,
-    head:[['Tank','Dip','Volume','Day','Date & Time']],
+    head:[['Tank','Dip','Volume','Day','Date & Time','Note']],
     body:rows,
     headStyles:{fillColor:[37,99,235]},
     styles:{fontSize:9}
@@ -243,11 +265,11 @@ function exportHistoryExcel(){
     return;
   }
 
-  const rows=[['Tank','Dip (mm)','Volume','Day','Date & Time']];
-  list.forEach(e=>rows.push([e.tank,e.dip,e.volume,e.day||'',e.time]));
+  const rows=[['Tank','Dip (mm)','Volume','Day','Date & Time','Note']];
+  list.forEach(e=>rows.push([e.tank,e.dip,e.volume,e.day||'',e.time,e.note||'']));
 
   const ws=XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols']=[{wch:10},{wch:10},{wch:14},{wch:8},{wch:20}];
+  ws['!cols']=[{wch:10},{wch:10},{wch:14},{wch:8},{wch:20},{wch:28}];
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'Dip History');
 
@@ -269,7 +291,8 @@ function shareHistoryWhatsApp(){
   let msg='*Al Mukhtar Petroleum — Fuel Dip Readings*\n\n';
   recent.forEach(e=>{
     const dayPart=e.day?e.day+', ':'';
-    msg+='• '+e.tank+' — '+e.dip+'mm → '+e.volume+' ('+dayPart+e.time+')\n';
+    const notePart=e.note?' — 📝 '+e.note:'';
+    msg+='• '+e.tank+' — '+e.dip+'mm → '+e.volume+' ('+dayPart+e.time+')'+notePart+'\n';
   });
   msg+='\nSent from Fuel Dip Calculator app.';
 
