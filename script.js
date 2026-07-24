@@ -677,11 +677,25 @@ function clearChartHighlight(){
 renderChartTable(tank50,'chartTableWrap',2);
 
 /* ---------- Copy Result to clipboard ---------- */
-function copyResult(valueId, btnId){
+function copyResult(dipId, valueId, noteId, btnId, tankLabel){
+  const dipEl = document.getElementById(dipId);
   const el = document.getElementById(valueId);
+  const noteEl = noteId ? document.getElementById(noteId) : null;
   const btn = document.getElementById(btnId);
   if(!el) return;
-  const text = el.textContent.trim();
+
+  const dip = dipEl ? dipEl.value.trim() : '';
+  const volume = el.textContent.trim();
+  const note = noteEl ? noteEl.value.trim() : '';
+  const now = new Date();
+  const dayStr = now.toLocaleDateString(undefined,{weekday:'short'});
+  const dateTimeStr = now.toLocaleString(undefined,{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+
+  let text = 'Tank: '+(tankLabel||'')+'\n'+
+    'Dip: '+(dip!==''?dip+' mm':'—')+'\n'+
+    'Available Fuel: '+volume+'\n'+
+    'Note: '+(note!==''?note:'—')+'\n'+
+    'Date & Time: '+dayStr+', '+dateTimeStr;
 
   const showCopied = function(){
     if(!btn) return;
