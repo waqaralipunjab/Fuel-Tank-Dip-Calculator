@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2563EB">
+<meta name="theme-color" content="#FFC72C">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -61,6 +61,18 @@
     <div class="modal-head">
       <h2>⚙️ App Settings</h2>
       <button type="button" class="modal-close" onclick="closeSettings()">✕</button>
+    </div>
+
+    <div class="modal-row">
+      <div>
+        <div class="modal-row-title">🎨 Color Scheme</div>
+        <div class="modal-row-sub">Choose the app's brand color theme</div>
+      </div>
+      <select id="colorSchemeSelect" class="scheme-select" onchange="onSchemeChange(this.value)">
+        <option value="shell">🐚 Shell (Yellow/Red)</option>
+        <option value="classic">🔵 Classic Blue (v23)</option>
+        <option value="v1">🌑 Premium Dark (v1)</option>
+      </select>
     </div>
 
     <div class="modal-row">
@@ -131,21 +143,24 @@
 
     <div class="dev-panel">
       <div class="dev-brand">
-        <svg class="dev-logo" viewBox="0 0 24 24" fill="none"><path d="M12 2C12 2 5 10.5 5 15a7 7 0 0 0 14 0c0-4.5-7-13-7-13z" fill="currentColor"></path></svg>
-        <span class="dev-company">Digital <em>Dip</em> Solutions</span>
+        <span class="dev-role">👨‍💻 Developed &amp; Maintained By</span>
       </div>
 
-      <div class="dev-sub">Powered by Waqar Ali Punjab &nbsp;•&nbsp; Version 1.18</div>
+      <div class="dev-name">WaQaR Ali</div>
+      <div class="dev-company">Digital Solutions</div>
 
       <div class="dev-contact">
-        <a href="mailto:Waqarali.punjab@gmail.com" class="dev-link">
-          <svg class="dev-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M2 6l10 7 10-7"></path></svg>
-          Waqarali.punjab@gmail.com
+        <a href="mailto:Digitalsolution.ryk@gmail.com" class="dev-link">
+          📧 Email: Digitalsolution.ryk@gmail.com
         </a>
-        <a href="https://api.whatsapp.com/send?phone=923009630013&text=Hello%21%20I%20am%20interested%20in%20the%20Fuel%20Tank%20Dip%20Calculator%20App.%20Please%20share%20more%20details." class="dev-link" target="_blank" rel="noopener">
-          <svg class="dev-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.42a9.87 9.87 0 0 0 4.62 1.18h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.03c-.24.68-1.4 1.3-1.93 1.36-.5.06-1.02.26-3.43-.72-2.9-1.19-4.77-4.12-4.92-4.31-.15-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.42-.07.65.5.24.58.82 2 .89 2.15.07.15.11.32.02.51-.09.19-.14.31-.28.48-.14.16-.29.37-.42.5-.14.14-.28.29-.12.57.16.29.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.24 1.38.29.14.45.12.62-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.64-.14.26.1 1.67.79 1.95.93.29.14.48.21.55.33.07.12.07.68-.17 1.36z"></path></svg>
-          +92-300-9630013
+        <a href="https://api.whatsapp.com/send?phone=923009630013&text=Hello%21%20I%20am%20interested%20in%20the%20Fuel%20Tank%20Dip%20Calculator%20App.%20Please%20share%20more%20details." class="dev-link dev-link-whatsapp" target="_blank" rel="noopener">
+          📱 WhatsApp: +92 300 9630013
         </a>
+      </div>
+
+      <div class="dev-meta">
+        <div class="dev-version">🌐 Version: v2.0</div>
+        <div class="dev-copyright">© 2026 All Rights Reserved</div>
       </div>
     </div>
   </footer>
@@ -201,6 +216,7 @@
 
           <div class="btn-row">
             <button type="button" class="save-btn" onclick="saveReading('t50','50-KL')">💾 Save reading</button>
+            <button type="button" class="copy-btn" id="copyBtn50" onclick="copyResult('r50','copyBtn50')">📋 Copy Result</button>
             <button type="button" class="clear-btn" onclick="clearInput('t50',tank50,'r50')">✕ Clear</button>
           </div>
 
@@ -271,6 +287,7 @@
 
           <div class="btn-row">
             <button type="button" class="save-btn" onclick="saveReading('t25','25-KL')">💾 Save reading</button>
+            <button type="button" class="copy-btn" id="copyBtn25" onclick="copyResult('r25','copyBtn25')">📋 Copy Result</button>
             <button type="button" class="clear-btn" onclick="clearInput('t25',tank25,'r25')">✕ Clear</button>
           </div>
 

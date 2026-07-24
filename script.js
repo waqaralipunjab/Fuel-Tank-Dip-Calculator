@@ -370,6 +370,30 @@ function onSettingsThemeToggle(checked){
   applyTheme(saved);
 })();
 
+/* ---------- Color scheme (Shell / Classic Blue) — controlled from Settings ---------- */
+const SCHEME_KEY='fuelDipColorScheme';
+
+function applyScheme(scheme){
+  const valid=['shell','classic','v1'];
+  const s = valid.includes(scheme) ? scheme : 'shell';
+  document.body.classList.toggle('theme-shell', s==='shell');
+  document.body.classList.toggle('theme-classic', s==='classic');
+  document.body.classList.toggle('theme-v1', s==='v1');
+  const sel=document.getElementById('colorSchemeSelect');
+  if(sel) sel.value=s;
+}
+
+function onSchemeChange(value){
+  applyScheme(value);
+  try{ localStorage.setItem(SCHEME_KEY,value); }catch(e){}
+}
+
+(function initScheme(){
+  let saved='shell';
+  try{ saved=localStorage.getItem(SCHEME_KEY)||'shell'; }catch(e){}
+  applyScheme(saved);
+})();
+
 /* ---------- PIN Lock ---------- */
 const PIN_ENABLED_KEY='fuelDipPinEnabled';
 const PIN_VALUE_KEY='fuelDipPinValue';
@@ -435,6 +459,13 @@ function openSettings(){
 
   const darkToggle=document.getElementById('darkModeToggle');
   if(darkToggle) darkToggle.checked=document.body.classList.contains('dark-theme');
+
+  const schemeSel=document.getElementById('colorSchemeSelect');
+  if(schemeSel){
+    schemeSel.value = document.body.classList.contains('theme-v1') ? 'v1'
+      : document.body.classList.contains('theme-classic') ? 'classic'
+      : 'shell';
+  }
 
   modal.style.display='flex';
 }
@@ -644,6 +675,46 @@ function clearChartHighlight(){
 }
 
 renderChartTable(tank50,'chartTableWrap',2);
+
+/* ---------- Copy Result to clipboard ---------- */
+function copyResult(valueId, btnId){
+  const el = document.getElementById(valueId);
+  const btn = document.getElementById(btnId);
+  if(!el) return;
+  const text = el.textContent.trim();
+
+  const showCopied = function(){
+    if(!btn) return;
+    if(!btn.dataset.label) btn.dataset.label = btn.innerHTML;
+    btn.innerHTML = '✅ Copied!';
+    btn.classList.add('is-copied');
+    clearTimeout(btn._copyTimer);
+    btn._copyTimer = setTimeout(function(){
+      btn.innerHTML = btn.dataset.label;
+      btn.classList.remove('is-copied');
+    }, 1500);
+  };
+
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(showCopied).catch(function(){
+      fallbackCopy(text, showCopied);
+    });
+  } else {
+    fallbackCopy(text, showCopied);
+  }
+}
+
+function fallbackCopy(text, done){
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try{ document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta);
+  if(done) done();
+}
 
 /* ---------- Bottom nav — tab panel switcher ---------- */
 function showPanel(navId){
