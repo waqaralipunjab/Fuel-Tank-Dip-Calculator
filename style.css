@@ -511,14 +511,14 @@ body{
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 12px;
   min-width: 0;
 }
 
 .field{
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 5px;
 }
 
 .field-label{
@@ -551,8 +551,8 @@ body{
   color: var(--text);
   font-family: var(--font-mono);
   font-weight: 600;
-  font-size: 19px;
-  padding: 13px 48px 13px 40px;
+  font-size: 16px;
+  padding: 9px 44px 9px 38px;
   outline: none;
   transition: border-color .18s ease, box-shadow .18s ease;
 }
@@ -578,7 +578,7 @@ body{
   font-family: var(--font-body);
   font-weight: 500;
   font-size: 14px;
-  padding: 11px 14px;
+  padding: 9px 12px;
 }
 
 .field-input-wrap input.note-input::placeholder{ font-size: 13px; }
@@ -589,7 +589,7 @@ body{
   border: 1px solid var(--border);
   border-left: 5px solid var(--success);
   border-radius: var(--radius-md);
-  padding: 14px 16px;
+  padding: 10px 14px;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -620,7 +620,7 @@ body{
 .readout-value{
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: clamp(28px, 5.4vw, 34px);
+  font-size: clamp(22px, 4.6vw, 26px);
   color: var(--success-dark);
   letter-spacing: -.01em;
   line-height: 1.2;
@@ -681,14 +681,13 @@ body{
 
 /* ---------- Buttons ---------- */
 .save-btn{
-  align-self: flex-start;
   background: linear-gradient(135deg, var(--shell-yellow), var(--shell-yellow-dark));
   border: none;
   color: #1F2937;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 11.5px;
   font-weight: 700;
-  padding: 11px 18px;
+  padding: 10px 8px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   box-shadow: 0 6px 16px rgba(255,199,44,.4);
@@ -700,8 +699,19 @@ body{
 
 .btn-row{
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.btn-row > button{
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  text-align: center;
+  line-height: 1.25;
+  word-break: break-word;
 }
 
 .clear-btn{
@@ -709,9 +719,9 @@ body{
   border: 1.5px solid #D1D5DB;
   color: #374151;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 11.5px;
   font-weight: 600;
-  padding: 11px 18px;
+  padding: 10px 8px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: border-color .15s ease, color .15s ease, background .15s ease, transform .15s ease;
@@ -730,9 +740,9 @@ body{
   border: none;
   color: #ffffff;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 11.5px;
   font-weight: 600;
-  padding: 11px 18px;
+  padding: 10px 8px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   box-shadow: 0 6px 16px rgba(34,197,94,.32);
@@ -1318,6 +1328,31 @@ body.dark-theme .history-note{
 }
 
 /* ---------- Reverse lookup divider (litres -> dip, inside tank card) ---------- */
+.reverse-row{
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.reverse-row .field{
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.reverse-row .readout-reverse{
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.reverse-row .field-input-wrap input{
+  font-size: 14px;
+  padding: 9px 34px 9px 34px;
+}
+
+.reverse-row .readout-value{
+  font-size: 18px;
+}
+
 .reverse-divider{
   display: flex;
   align-items: center;
