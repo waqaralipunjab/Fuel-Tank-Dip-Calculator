@@ -21,6 +21,28 @@
 <div class="bg-orb bg-orb-1" aria-hidden="true"></div>
 <div class="bg-orb bg-orb-2" aria-hidden="true"></div>
 
+<!-- ===== BISMILLAH SPLASH SCREEN ===== -->
+<div id="splashScreen" class="splash-overlay">
+  <div class="splash-inner">
+    <img src="bismillah.jpg" alt="Bismillah ir-Rahman ir-Rahim" class="splash-img">
+    <div class="splash-brand">Al Mukhtar Petroleum</div>
+    <div class="splash-tagline">Fuel Dip Calculator</div>
+    <div class="splash-loading">
+      <span class="splash-loading-text">Loading</span>
+      <span class="splash-dot">.</span><span class="splash-dot">.</span><span class="splash-dot">.</span>
+    </div>
+  </div>
+
+  <div class="splash-dev">
+    <div class="splash-dev-brand">◆ Digital Solutions</div>
+    <div class="splash-dev-address">By Pass Road, Rahim Yar Khan</div>
+    <div class="splash-dev-contact">
+      <span>✉️ Digitalsolution.ryk@gmail.com</span>
+      <span>📱 +92-300-9630013</span>
+    </div>
+  </div>
+</div>
+
 <!-- ===== PIN LOCK SCREEN ===== -->
 <div id="lockScreen" class="lock-overlay" style="display:none;">
   <div class="lock-card">
@@ -79,174 +101,269 @@
 </div>
 
 <div id="appContent">
-<header class="site-head" id="navHome">
-  <div class="plate">
-    <div class="plate-badge">🛢 Fuel Management System</div>
-    <h1 class="customer-name">Al Mukhtar Petroleum</h1>
-    <p class="plate-tagline">Fuel Dip Calculator</p>
-    <div class="plate-clock" id="clock">—</div>
-  </div>
-</header>
 
-<main class="tanks" id="navTanks">
+<!-- ===== HOME PANEL ===== -->
+<div class="app-panel" id="panelHome" data-panel="navHome">
 
-  <section class="tank-card" data-tank="t50">
-    <div class="tank-card-head">
-      <span class="tank-chip">🛢 50-KL Tank</span>
-      <span class="tank-capacity">cap. 49,855&nbsp;L</span>
+  <header class="site-head">
+    <div class="plate">
+      <div class="plate-badge">🛢 Fuel Management System</div>
+      <h1 class="customer-name">Al Mukhtar Petroleum</h1>
+      <p class="plate-tagline">Fuel Dip Calculator</p>
+      <div class="plate-clock" id="clock">—</div>
+    </div>
+  </header>
+
+  <section class="site-info-card">
+    <div class="site-info-head">
+      <span class="site-info-title">🛢 Storage Tanks — Overview</span>
     </div>
 
-    <div class="tank-body">
-      <div class="gauge" aria-hidden="true">
-        <div class="gauge-tube">
-          <div class="gauge-fill" id="g50"></div>
-          <div class="gauge-ticks"></div>
-        </div>
-      </div>
-
-      <div class="tank-controls">
-        <label class="field">
-          <span class="field-label">📏 Dip reading</span>
-          <span class="field-input-wrap">
-            <span class="field-icon">📏</span>
-            <input id="t50" inputmode="decimal" autocomplete="off" placeholder="Enter dip in mm" oninput="calc('t50',tank50,'r50')">
-            <span class="field-suffix">mm</span>
-          </span>
-        </label>
-
-        <div class="readout" id="readout50">
-          <div class="readout-top">
-            <span class="readout-check">✅</span>
-            <span class="readout-label">⛽ Available Fuel</span>
-          </div>
-          <div id="r50" class="readout-value">0.00 L</div>
-          <div class="readout-meta">
-            <span id="p50" class="readout-pct">0% full</span>
-            <span id="rem50" class="readout-remaining">Rem. 49,855 L</span>
-          </div>
-        </div>
-
-        <label class="field">
-          <span class="field-label">📝 Note (optional)</span>
-          <span class="field-input-wrap">
-            <input id="note50" class="note-input" type="text" autocomplete="off" placeholder="e.g. Before dispatch, Morning check" maxlength="120">
-          </span>
-        </label>
-
-        <div class="btn-row">
-          <button type="button" class="save-btn" onclick="saveReading('t50','50-KL')">💾 Save reading</button>
-          <button type="button" class="clear-btn" onclick="clearInput('t50',tank50,'r50')">✕ Clear</button>
-        </div>
-      </div>
+    <div class="site-info-grid">
+      <div class="spec-row"><span class="spec-label">🛢 50-KL Tank Capacity</span><span class="spec-value">49,855 L</span></div>
+      <div class="spec-row"><span class="spec-label">🛢 25-KL Tank Capacity</span><span class="spec-value">23,950 L</span></div>
+      <div class="spec-row"><span class="spec-label">Total Storage Capacity</span><span class="spec-value">73,805 L</span></div>
     </div>
   </section>
 
-  <section class="tank-card" data-tank="t25">
-    <div class="tank-card-head">
-      <span class="tank-chip">🛢 25-KL Tank</span>
-      <span class="tank-capacity">cap. 23,950&nbsp;L</span>
+  <footer class="site-foot">
+    <span>Results are based on the uploaded calibration chart. Always verify before final fuel dispatch.</span>
+
+    <div class="dev-panel">
+      <div class="dev-brand">
+        <svg class="dev-logo" viewBox="0 0 24 24" fill="none"><path d="M12 2C12 2 5 10.5 5 15a7 7 0 0 0 14 0c0-4.5-7-13-7-13z" fill="currentColor"></path></svg>
+        <span class="dev-company">Digital <em>Dip</em> Solutions</span>
+      </div>
+
+      <div class="dev-sub">Powered by Waqar Ali Punjab &nbsp;•&nbsp; Version 1.18</div>
+
+      <div class="dev-contact">
+        <a href="mailto:Waqarali.punjab@gmail.com" class="dev-link">
+          <svg class="dev-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M2 6l10 7 10-7"></path></svg>
+          Waqarali.punjab@gmail.com
+        </a>
+        <a href="https://api.whatsapp.com/send?phone=923009630013&text=Hello%21%20I%20am%20interested%20in%20the%20Fuel%20Tank%20Dip%20Calculator%20App.%20Please%20share%20more%20details." class="dev-link" target="_blank" rel="noopener">
+          <svg class="dev-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.42a9.87 9.87 0 0 0 4.62 1.18h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.03c-.24.68-1.4 1.3-1.93 1.36-.5.06-1.02.26-3.43-.72-2.9-1.19-4.77-4.12-4.92-4.31-.15-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.42-.07.65.5.24.58.82 2 .89 2.15.07.15.11.32.02.51-.09.19-.14.31-.28.48-.14.16-.29.37-.42.5-.14.14-.28.29-.12.57.16.29.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.24 1.38.29.14.45.12.62-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.64-.14.26.1 1.67.79 1.95.93.29.14.48.21.55.33.07.12.07.68-.17 1.36z"></path></svg>
+          +92-300-9630013
+        </a>
+      </div>
     </div>
+  </footer>
 
-    <div class="tank-body">
-      <div class="gauge" aria-hidden="true">
-        <div class="gauge-tube">
-          <div class="gauge-fill" id="g25"></div>
-          <div class="gauge-ticks"></div>
-        </div>
+</div>
+
+<!-- ===== TANKS PANEL ===== -->
+<div class="app-panel" id="panelTanks" data-panel="navTanks" style="display:none;">
+  <main class="tanks">
+
+    <section class="tank-card" data-tank="t50">
+      <div class="tank-card-head">
+        <span class="tank-chip">🛢 50-KL Tank</span>
+        <span class="tank-capacity">cap. 49,855&nbsp;L</span>
       </div>
 
-      <div class="tank-controls">
-        <label class="field">
-          <span class="field-label">📏 Dip reading</span>
-          <span class="field-input-wrap">
-            <span class="field-icon">📏</span>
-            <input id="t25" inputmode="decimal" autocomplete="off" placeholder="Enter dip in mm" oninput="calc('t25',tank25,'r25')">
-            <span class="field-suffix">mm</span>
-          </span>
-        </label>
-
-        <div class="readout" id="readout25">
-          <div class="readout-top">
-            <span class="readout-check">✅</span>
-            <span class="readout-label">⛽ Available Fuel</span>
-          </div>
-          <div id="r25" class="readout-value">0.00 L</div>
-          <div class="readout-meta">
-            <span id="p25" class="readout-pct">0% full</span>
-            <span id="rem25" class="readout-remaining">Rem. 23,950 L</span>
+      <div class="tank-body">
+        <div class="gauge" aria-hidden="true">
+          <div class="gauge-tube">
+            <div class="gauge-fill" id="g50"></div>
+            <div class="gauge-ticks"></div>
           </div>
         </div>
 
-        <label class="field">
-          <span class="field-label">📝 Note (optional)</span>
-          <span class="field-input-wrap">
-            <input id="note25" class="note-input" type="text" autocomplete="off" placeholder="e.g. Before dispatch, Morning check" maxlength="120">
-          </span>
-        </label>
+        <div class="tank-controls">
+          <label class="field">
+            <span class="field-label">📏 Dip reading</span>
+            <span class="field-input-wrap">
+              <span class="field-icon">📏</span>
+              <input id="t50" inputmode="decimal" autocomplete="off" placeholder="Enter dip in mm" oninput="calc('t50',tank50,'r50')">
+              <span class="field-suffix">mm</span>
+            </span>
+          </label>
 
-        <div class="btn-row">
-          <button type="button" class="save-btn" onclick="saveReading('t25','25-KL')">💾 Save reading</button>
-          <button type="button" class="clear-btn" onclick="clearInput('t25',tank25,'r25')">✕ Clear</button>
+          <div class="readout" id="readout50">
+            <div class="readout-top">
+              <span class="readout-check">✅</span>
+              <span class="readout-label">⛽ Available Fuel</span>
+            </div>
+            <div id="r50" class="readout-value">0.00 L</div>
+            <div class="readout-meta">
+              <span id="p50" class="readout-pct">0% full</span>
+              <span id="rem50" class="readout-remaining">Rem. 49,855 L</span>
+            </div>
+          </div>
+
+          <label class="field">
+            <span class="field-label">📝 Note (optional)</span>
+            <span class="field-input-wrap">
+              <input id="note50" class="note-input" type="text" autocomplete="off" placeholder="e.g. Before dispatch, Morning check" maxlength="120">
+            </span>
+          </label>
+
+          <div class="btn-row">
+            <button type="button" class="save-btn" onclick="saveReading('t50','50-KL')">💾 Save reading</button>
+            <button type="button" class="clear-btn" onclick="clearInput('t50',tank50,'r50')">✕ Clear</button>
+          </div>
+
+          <div class="reverse-divider"><span>🔄 Reverse Lookup — Litres → Dip</span></div>
+
+          <label class="field">
+            <span class="field-label">⛽ Enter litres</span>
+            <span class="field-input-wrap">
+              <span class="field-icon">⛽</span>
+              <input id="t50_ltr" inputmode="decimal" autocomplete="off" placeholder="e.g. 20000" oninput="reverseCalc('t50_ltr',tank50,'r50_ltr','readout50_ltr')">
+              <span class="field-suffix">L</span>
+            </span>
+          </label>
+
+          <div class="readout readout-reverse" id="readout50_ltr">
+            <div class="readout-top">
+              <span class="readout-check">✅</span>
+              <span class="readout-label">📏 Estimated Dip</span>
+            </div>
+            <div id="r50_ltr" class="readout-value">0.0 mm</div>
+          </div>
         </div>
       </div>
+    </section>
+
+    <section class="tank-card" data-tank="t25">
+      <div class="tank-card-head">
+        <span class="tank-chip">🛢 25-KL Tank</span>
+        <span class="tank-capacity">cap. 23,950&nbsp;L</span>
+      </div>
+
+      <div class="tank-body">
+        <div class="gauge" aria-hidden="true">
+          <div class="gauge-tube">
+            <div class="gauge-fill" id="g25"></div>
+            <div class="gauge-ticks"></div>
+          </div>
+        </div>
+
+        <div class="tank-controls">
+          <label class="field">
+            <span class="field-label">📏 Dip reading</span>
+            <span class="field-input-wrap">
+              <span class="field-icon">📏</span>
+              <input id="t25" inputmode="decimal" autocomplete="off" placeholder="Enter dip in mm" oninput="calc('t25',tank25,'r25')">
+              <span class="field-suffix">mm</span>
+            </span>
+          </label>
+
+          <div class="readout" id="readout25">
+            <div class="readout-top">
+              <span class="readout-check">✅</span>
+              <span class="readout-label">⛽ Available Fuel</span>
+            </div>
+            <div id="r25" class="readout-value">0.00 L</div>
+            <div class="readout-meta">
+              <span id="p25" class="readout-pct">0% full</span>
+              <span id="rem25" class="readout-remaining">Rem. 23,950 L</span>
+            </div>
+          </div>
+
+          <label class="field">
+            <span class="field-label">📝 Note (optional)</span>
+            <span class="field-input-wrap">
+              <input id="note25" class="note-input" type="text" autocomplete="off" placeholder="e.g. Before dispatch, Morning check" maxlength="120">
+            </span>
+          </label>
+
+          <div class="btn-row">
+            <button type="button" class="save-btn" onclick="saveReading('t25','25-KL')">💾 Save reading</button>
+            <button type="button" class="clear-btn" onclick="clearInput('t25',tank25,'r25')">✕ Clear</button>
+          </div>
+
+          <div class="reverse-divider"><span>🔄 Reverse Lookup — Litres → Dip</span></div>
+
+          <label class="field">
+            <span class="field-label">⛽ Enter litres</span>
+            <span class="field-input-wrap">
+              <span class="field-icon">⛽</span>
+              <input id="t25_ltr" inputmode="decimal" autocomplete="off" placeholder="e.g. 10400" oninput="reverseCalc('t25_ltr',tank25,'r25_ltr','readout25_ltr')">
+              <span class="field-suffix">L</span>
+            </span>
+          </label>
+
+          <div class="readout readout-reverse" id="readout25_ltr">
+            <div class="readout-top">
+              <span class="readout-check">✅</span>
+              <span class="readout-label">📏 Estimated Dip</span>
+            </div>
+            <div id="r25_ltr" class="readout-value">0.0 mm</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===== REPORTS PANEL ===== -->
+<div class="app-panel" id="panelReports" data-panel="navReports" style="display:none;">
+  <section class="history">
+    <div class="history-head">
+      <span class="history-title">📊 Reading History</span>
+      <div class="history-actions">
+        <button type="button" class="history-export" onclick="exportHistoryCSV()">⬇️ CSV</button>
+        <button type="button" class="history-pdf" onclick="exportHistoryPDF()">📄 PDF</button>
+        <button type="button" class="history-excel" onclick="exportHistoryExcel()">📊 Excel</button>
+        <button type="button" class="history-whatsapp" onclick="shareHistoryWhatsApp()">📤 WhatsApp</button>
+        <button type="button" class="history-clear" onclick="clearHistory()">Clear</button>
+      </div>
+    </div>
+    <div id="historyList" class="history-list">
+      <div class="history-empty">No readings saved yet.</div>
     </div>
   </section>
+</div>
 
-</main>
-
-<section class="history" id="navReports">
-  <div class="history-head">
-    <span class="history-title">📊 Reading History</span>
-    <div class="history-actions">
-      <button type="button" class="history-export" onclick="exportHistoryCSV()">⬇️ CSV</button>
-      <button type="button" class="history-pdf" onclick="exportHistoryPDF()">📄 PDF</button>
-      <button type="button" class="history-excel" onclick="exportHistoryExcel()">📊 Excel</button>
-      <button type="button" class="history-whatsapp" onclick="shareHistoryWhatsApp()">📤 WhatsApp</button>
-      <button type="button" class="history-clear" onclick="clearHistory()">Clear</button>
-    </div>
-  </div>
-  <div id="historyList" class="history-list">
-    <div class="history-empty">No readings saved yet.</div>
-  </div>
-</section>
-
-<footer class="site-foot">
-  <span>Readings are linearly interpolated from calibration charts. Verify manually before dispatch.</span>
-
-  <div class="dev-panel">
-    <div class="dev-brand">
-      <svg class="dev-logo" viewBox="0 0 24 24" fill="none"><path d="M12 2C12 2 5 10.5 5 15a7 7 0 0 0 14 0c0-4.5-7-13-7-13z" fill="currentColor"></path></svg>
-      <span class="dev-company">Digital <em>Dip</em> Solutions</span>
+<!-- ===== DIP CHART PANEL ===== -->
+<div class="app-panel" id="panelChart" data-panel="navChart" style="display:none;">
+  <section class="chart-section">
+    <div class="chart-head">
+      <span class="chart-title">📋 Dip Calibration Chart</span>
+      <span class="chart-note">Full reference table</span>
     </div>
 
-    <div class="dev-sub">Powered by Waqar Ali &nbsp;•&nbsp; Version 1.18</div>
-
-    <div class="dev-contact">
-      <a href="mailto:Waqarali.punjab@gmail.com" class="dev-link">
-        <svg class="dev-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M2 6l10 7 10-7"></path></svg>
-        Waqarali.punjab@gmail.com
-      </a>
-      <a href="https://api.whatsapp.com/send?phone=923009630013&text=Hello%21%20I%20am%20interested%20in%20the%20Fuel%20Tank%20Dip%20Calculator%20App.%20Please%20share%20more%20details." class="dev-link" target="_blank" rel="noopener">
-        <svg class="dev-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.42a9.87 9.87 0 0 0 4.62 1.18h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.03c-.24.68-1.4 1.3-1.93 1.36-.5.06-1.02.26-3.43-.72-2.9-1.19-4.77-4.12-4.92-4.31-.15-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.42-.07.65.5.24.58.82 2 .89 2.15.07.15.11.32.02.51-.09.19-.14.31-.28.48-.14.16-.29.37-.42.5-.14.14-.28.29-.12.57.16.29.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.24 1.38.29.14.45.12.62-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.64-.14.26.1 1.67.79 1.95.93.29.14.48.21.55.33.07.12.07.68-.17 1.36z"></path></svg>
-        +92-300-9630013
-      </a>
+    <div class="chart-tank-toggle">
+      <button type="button" class="mode-btn is-active" data-tank="t50" onclick="setChartTank('t50')">🛢 50-KL Tank</button>
+      <button type="button" class="mode-btn" data-tank="t25" onclick="setChartTank('t25')">🛢 25-KL Tank</button>
     </div>
-  </div>
-</footer>
+
+    <div class="chart-search">
+      <div class="chart-search-toggle">
+        <button type="button" class="mode-btn is-active" data-mode="mm" onclick="setChartSearchMode('mm')">📏 Search Dip (mm)</button>
+        <button type="button" class="mode-btn" data-mode="ltr" onclick="setChartSearchMode('ltr')">⛽ Search Litres (L)</button>
+      </div>
+      <span class="field-input-wrap">
+        <span class="field-icon" id="chartSearchIcon">📏</span>
+        <input id="chartSearchInput" inputmode="decimal" autocomplete="off" placeholder="Enter dip in mm" oninput="onChartSearch()">
+        <span class="field-suffix" id="chartSearchSuffix">mm</span>
+      </span>
+      <div id="chartSearchResult" class="chart-search-result"></div>
+    </div>
+
+    <div id="chartTableWrap" class="chart-table-wrap"></div>
+  </section>
+</div>
 
 </div>
 
 <!-- ===== BOTTOM NAV (mobile) ===== -->
 <nav class="bottom-nav" id="bottomNav" aria-label="Section navigation">
-  <a href="#navHome" class="nav-item is-active" data-nav="navHome">
+  <button type="button" class="nav-item is-active" data-nav="navHome" onclick="showPanel('navHome')">
     <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
-  </a>
-  <a href="#navTanks" class="nav-item" data-nav="navTanks">
+  </button>
+  <button type="button" class="nav-item" data-nav="navTanks" onclick="showPanel('navTanks')">
     <span class="nav-icon">🛢</span><span class="nav-label">Tanks</span>
-  </a>
-  <a href="#navReports" class="nav-item" data-nav="navReports">
+  </button>
+  <button type="button" class="nav-item" data-nav="navReports" onclick="showPanel('navReports')">
     <span class="nav-icon">📊</span><span class="nav-label">Reports</span>
-  </a>
+  </button>
+  <button type="button" class="nav-item" data-nav="navChart" onclick="showPanel('navChart')">
+    <span class="nav-icon">📋</span><span class="nav-label">Dip Chart</span>
+  </button>
   <button type="button" class="nav-item nav-item-btn" onclick="openSettings()">
     <span class="nav-icon">⚙️</span><span class="nav-label">Settings</span>
   </button>

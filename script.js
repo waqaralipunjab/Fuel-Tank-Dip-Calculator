@@ -63,6 +63,48 @@ function clearInput(inputId,data,res){
   calc(inputId,data,res);
 }
 
+/* ---------- Reverse lookup: litres -> dip (mm) ---------- */
+function reverseCalc(inputId,data,resId,readoutId){
+  const input=document.getElementById(inputId);
+  const r=document.getElementById(resId);
+  const readout=readoutId?document.getElementById(readoutId):null;
+  const v=parseFloat(input.value);
+  const minL=data[0][1];
+  const maxL=data[data.length-1][1];
+
+  r.classList.remove('is-error');
+
+  if(isNaN(v)){
+    r.innerText='0.0 mm';
+    if(readout) readout.classList.remove('has-value');
+    return;
+  }
+
+  if(v<minL||v>maxL){
+    r.innerText='Out of range';
+    r.classList.add('is-error');
+    if(readout) readout.classList.remove('has-value');
+    return;
+  }
+
+  const reversed=data.map(function(p){ return [p[1],p[0]]; });
+  const mm=interp(reversed,v);
+
+  if(mm==null){
+    r.innerText='Out of range';
+    r.classList.add('is-error');
+    if(readout) readout.classList.remove('has-value');
+    return;
+  }
+
+  r.innerText=mm.toFixed(1)+' mm';
+  if(readout){
+    readout.classList.remove('has-value');
+    void readout.offsetWidth;
+    readout.classList.add('has-value');
+  }
+}
+
 /* ---------- Live clock ---------- */
 function tickClock(){
   const el=document.getElementById('clock');
@@ -454,16 +496,161 @@ function savePin(){
   document.getElementById('confirmPin').value='';
 }
 
-checkLockOnLoad();
+/* ---------- Bismillah splash screen ---------- */
+function hideSplashAndReveal(){
+  const splash=document.getElementById('splashScreen');
+  checkLockOnLoad();
+  if(!splash) return;
+  splash.classList.add('splash-hide');
+  setTimeout(function(){ splash.style.display='none'; },650);
+}
+setTimeout(hideSplashAndReveal,4800);
 
-/* ---------- Bottom nav ---------- */
-(function initBottomNav(){
-  const items=document.querySelectorAll('.bottom-nav .nav-item[data-nav]');
-  if(!items.length) return;
-  items.forEach(function(item){
-    item.addEventListener('click',function(){
-      items.forEach(function(i){ i.classList.remove('is-active'); });
-      item.classList.add('is-active');
-    });
+/* ---------- Dip Chart page (multi-tank calibration reference table) ---------- */
+const CHART_TANKS={ t50:{data:tank50,label:'50-KL Tank'}, t25:{data:tank25,label:'25-KL Tank'} };
+let chartActiveTank='t50';
+let chartSearchMode='mm';
+
+function renderChartTable(data,containerId,numCols){
+  const container=document.getElementById(containerId);
+  if(!container) return;
+
+  numCols=numCols||2;
+  const perCol=Math.ceil(data.length/numCols);
+  const chunks=[];
+  for(let c=0;c<numCols;c++){
+    chunks.push(data.slice(c*perCol,c*perCol+perCol));
+  }
+
+  let html='<table class="chart-table"><thead><tr>';
+  for(let c=0;c<numCols;c++){
+    html+='<th>Fill (mm)</th><th>Volume (L)</th>';
+  }
+  html+='</tr></thead><tbody>';
+
+  for(let row=0;row<perCol;row++){
+    html+='<tr>';
+    for(let c=0;c<numCols;c++){
+      const pair=chunks[c][row];
+      if(pair){
+        html+='<td data-mm="'+pair[0]+'">'+pair[0]+'</td><td>'+pair[1].toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+'</td>';
+      }else{
+        html+='<td></td><td></td>';
+      }
+    }
+    html+='</tr>';
+  }
+  html+='</tbody></table>';
+
+  container.innerHTML=html;
+}
+
+function setChartTank(tankId){
+  if(!CHART_TANKS[tankId]) return;
+  chartActiveTank=tankId;
+
+  document.querySelectorAll('.chart-tank-toggle .mode-btn').forEach(function(b){
+    b.classList.toggle('is-active', b.dataset.tank===tankId);
   });
-})();
+
+  renderChartTable(CHART_TANKS[tankId].data,'chartTableWrap',2);
+  document.getElementById('chartSearchInput').value='';
+  document.getElementById('chartSearchResult').innerHTML='';
+  clearChartHighlight();
+}
+
+function setChartSearchMode(mode){
+  chartSearchMode=mode;
+  document.querySelectorAll('.chart-search-toggle .mode-btn').forEach(function(b){
+    b.classList.toggle('is-active', b.dataset.mode===mode);
+  });
+
+  const input=document.getElementById('chartSearchInput');
+  const icon=document.getElementById('chartSearchIcon');
+  const suffix=document.getElementById('chartSearchSuffix');
+
+  if(mode==='mm'){
+    input.placeholder='Enter dip in mm';
+    icon.innerText='📏';
+    suffix.innerText='mm';
+  }else{
+    input.placeholder='Enter litres';
+    icon.innerText='⛽';
+    suffix.innerText='L';
+  }
+
+  input.value='';
+  document.getElementById('chartSearchResult').innerHTML='';
+  clearChartHighlight();
+  input.focus();
+}
+
+function onChartSearch(){
+  const data=CHART_TANKS[chartActiveTank].data;
+  const input=document.getElementById('chartSearchInput');
+  const resultEl=document.getElementById('chartSearchResult');
+  const v=parseFloat(input.value);
+
+  clearChartHighlight();
+
+  if(isNaN(v)){
+    resultEl.innerHTML='';
+    return;
+  }
+
+  if(chartSearchMode==='mm'){
+    const minMm=data[0][0], maxMm=data[data.length-1][0];
+    if(v<minMm||v>maxMm){
+      resultEl.innerHTML='<span class="chart-search-error">Out of range</span>';
+      return;
+    }
+    const litres=interp(data,v);
+    resultEl.innerHTML='📏 '+v+' mm&nbsp;→&nbsp;<strong>'+litres.toFixed(2)+' L</strong>';
+    highlightNearestMm(v);
+  }else{
+    const minL=data[0][1], maxL=data[data.length-1][1];
+    if(v<minL||v>maxL){
+      resultEl.innerHTML='<span class="chart-search-error">Out of range</span>';
+      return;
+    }
+    const reversed=data.map(function(p){ return [p[1],p[0]]; });
+    const mm=interp(reversed,v);
+    resultEl.innerHTML='⛽ '+v+' L&nbsp;→&nbsp;<strong>'+mm.toFixed(1)+' mm</strong>';
+    highlightNearestMm(mm);
+  }
+}
+
+function highlightNearestMm(mmValue){
+  const wrap=document.getElementById('chartTableWrap');
+  if(!wrap) return;
+
+  let nearestTd=null, nearestDiff=Infinity;
+  wrap.querySelectorAll('td[data-mm]').forEach(function(td){
+    const diff=Math.abs(parseFloat(td.dataset.mm)-mmValue);
+    if(diff<nearestDiff){ nearestDiff=diff; nearestTd=td; }
+  });
+
+  if(nearestTd){
+    const tr=nearestTd.closest('tr');
+    tr.classList.add('row-highlight');
+    tr.scrollIntoView({block:'center',behavior:'smooth'});
+  }
+}
+
+function clearChartHighlight(){
+  document.querySelectorAll('.chart-table tr.row-highlight').forEach(function(tr){
+    tr.classList.remove('row-highlight');
+  });
+}
+
+renderChartTable(tank50,'chartTableWrap',2);
+
+/* ---------- Bottom nav — tab panel switcher ---------- */
+function showPanel(navId){
+  document.querySelectorAll('.app-panel[data-panel]').forEach(function(panel){
+    panel.style.display=(panel.dataset.panel===navId)?'flex':'none';
+  });
+  document.querySelectorAll('.bottom-nav .nav-item[data-nav]').forEach(function(item){
+    item.classList.toggle('is-active', item.dataset.nav===navId);
+  });
+}
