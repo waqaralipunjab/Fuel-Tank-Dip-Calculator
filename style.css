@@ -1134,8 +1134,8 @@ body.dark-theme .history-note{
 }
 
 .dev-panel{
-  margin-top: 18px;
-  padding: 26px 20px 22px;
+  margin-top: 14px;
+  padding: 18px 18px 16px;
   position: relative;
   overflow: hidden;
   background: #1F2937;
@@ -1178,17 +1178,17 @@ body.dark-theme .history-note{
 }
 
 .dev-name{
-  margin-top: 6px;
+  margin-top: 4px;
   font-weight: 800;
-  font-size: 21px;
+  font-size: 16px;
   letter-spacing: -.01em;
   color: var(--shell-yellow);
 }
 
 .dev-company{
-  margin-top: 2px;
+  margin-top: 1px;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12.5px;
   letter-spacing: .02em;
   color: #E5E7EB;
 }
@@ -1203,8 +1203,8 @@ body.dark-theme .history-note{
 }
 
 .dev-contact{
-  margin-top: 18px;
-  padding-top: 16px;
+  margin-top: 12px;
+  padding-top: 12px;
   border-top: 1px dashed rgba(255,255,255,.14);
   display: flex;
   flex-wrap: wrap;
@@ -1233,7 +1233,7 @@ body.dark-theme .history-note{
 .dev-link-whatsapp:hover{ color: var(--success); border-bottom-color: var(--success); filter: brightness(1.15); }
 
 .dev-meta{
-  margin-top: 16px;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1254,6 +1254,7 @@ body.dark-theme .history-note{
 
 @media (max-width: 480px){
   .dev-contact{ flex-direction: column; gap: 10px; }
+  .dev-name{ font-size: 14px; }
 }
 
 /* ---------- Home: Site Info Card ---------- */
