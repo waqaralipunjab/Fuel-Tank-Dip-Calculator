@@ -349,27 +349,6 @@ function shareHistoryWhatsApp(){
   window.open(url,'_blank','noopener');
 }
 
-/* ---------- Theme toggle (controlled from Settings) ---------- */
-const THEME_KEY='fuelDipTheme';
-
-function applyTheme(theme){
-  document.body.classList.toggle('dark-theme',theme==='dark');
-  const toggle=document.getElementById('darkModeToggle');
-  if(toggle) toggle.checked=(theme==='dark');
-}
-
-function onSettingsThemeToggle(checked){
-  const next=checked?'dark':'light';
-  applyTheme(next);
-  try{ localStorage.setItem(THEME_KEY,next); }catch(e){}
-}
-
-(function initTheme(){
-  let saved='light';
-  try{ saved=localStorage.getItem(THEME_KEY)||'light'; }catch(e){}
-  applyTheme(saved);
-})();
-
 /* ---------- Color scheme (Shell / Classic Blue) — controlled from Settings ---------- */
 const SCHEME_KEY='fuelDipColorScheme';
 
@@ -456,9 +435,6 @@ function openSettings(){
   document.getElementById('pinSetupMsg').innerText='';
   document.getElementById('newPin').value='';
   document.getElementById('confirmPin').value='';
-
-  const darkToggle=document.getElementById('darkModeToggle');
-  if(darkToggle) darkToggle.checked=document.body.classList.contains('dark-theme');
 
   const schemeSel=document.getElementById('colorSchemeSelect');
   if(schemeSel){
