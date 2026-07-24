@@ -4,6 +4,34 @@ function formatLiters(x){
   return x.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})+' L';
 }
 
+/* ---------- Animated counter (smooth count-up for result values) ---------- */
+function animateCounter(el, toValue, formatFn, duration){
+  formatFn = formatFn || formatLiters;
+  duration = duration || 450;
+  const fromValue = parseFloat(el.dataset.rawValue);
+  const start = isNaN(fromValue) ? 0 : fromValue;
+
+  if(el._counterRaf) cancelAnimationFrame(el._counterRaf);
+  el.dataset.rawValue = toValue;
+
+  if(Math.abs(toValue - start) < 0.05){
+    el.innerText = formatFn(toValue);
+    return;
+  }
+
+  const startTime = performance.now();
+  function step(now){
+    const t = Math.min(1, (now - startTime) / duration);
+    const eased = 1 - Math.pow(1 - t, 3);
+    const current = start + (toValue - start) * eased;
+    el.innerText = formatFn(current);
+    if(t < 1){
+      el._counterRaf = requestAnimationFrame(step);
+    }
+  }
+  el._counterRaf = requestAnimationFrame(step);
+}
+
 function calc(id,data,res){
   const v=parseFloat(document.getElementById(id).value);
   const r=document.getElementById(res);
@@ -19,7 +47,9 @@ function calc(id,data,res){
   r.classList.remove('is-error');
 
   if(isNaN(v)){
+    if(r._counterRaf) cancelAnimationFrame(r._counterRaf);
     r.innerText=formatLiters(0);
+    r.dataset.rawValue=0;
     if(gauge) gauge.style.height='0%';
     if(pctEl) pctEl.innerText='0% full';
     if(remEl) remEl.innerText='Rem. '+maxLitres.toLocaleString('en-US')+' L';
@@ -30,8 +60,10 @@ function calc(id,data,res){
   const x=interp(data,v);
 
   if(x==null){
+    if(r._counterRaf) cancelAnimationFrame(r._counterRaf);
     r.innerText='Out of range';
     r.classList.add('is-error');
+    r.dataset.rawValue=0;
     if(gauge) gauge.style.height='0%';
     if(pctEl) pctEl.innerText='check reading';
     if(remEl) remEl.innerText='Rem. —';
@@ -39,7 +71,7 @@ function calc(id,data,res){
     return;
   }
 
-  r.innerText=formatLiters(x);
+  animateCounter(r, x);
   const pct=Math.max(0,Math.min(100,(x/maxLitres)*100));
   if(gauge) gauge.style.height=pct.toFixed(1)+'%';
   if(pctEl) pctEl.innerText=pct.toFixed(0)+'% full';
@@ -75,14 +107,18 @@ function reverseCalc(inputId,data,resId,readoutId){
   r.classList.remove('is-error');
 
   if(isNaN(v)){
+    if(r._counterRaf) cancelAnimationFrame(r._counterRaf);
     r.innerText='0.0 mm';
+    r.dataset.rawValue=0;
     if(readout) readout.classList.remove('has-value');
     return;
   }
 
   if(v<minL||v>maxL){
+    if(r._counterRaf) cancelAnimationFrame(r._counterRaf);
     r.innerText='Out of range';
     r.classList.add('is-error');
+    r.dataset.rawValue=0;
     if(readout) readout.classList.remove('has-value');
     return;
   }
@@ -91,13 +127,15 @@ function reverseCalc(inputId,data,resId,readoutId){
   const mm=interp(reversed,v);
 
   if(mm==null){
+    if(r._counterRaf) cancelAnimationFrame(r._counterRaf);
     r.innerText='Out of range';
     r.classList.add('is-error');
+    r.dataset.rawValue=0;
     if(readout) readout.classList.remove('has-value');
     return;
   }
 
-  r.innerText=mm.toFixed(1)+' mm';
+  animateCounter(r, mm, function(x){ return x.toFixed(1)+' mm'; });
   if(readout){
     readout.classList.remove('has-value');
     void readout.offsetWidth;
@@ -349,8 +387,14 @@ function shareHistoryWhatsApp(){
   window.open(url,'_blank','noopener');
 }
 
-/* ---------- Color scheme (Shell / Classic Blue) — controlled from Settings ---------- */
+/* ---------- Color scheme (Shell / Classic Blue / Premium Dark) — controlled from Settings ---------- */
 const SCHEME_KEY='fuelDipColorScheme';
+
+const SCHEME_ICONS={
+  shell:   { 192:'icon-192-shell.png',   512:'icon-512-shell.png' },
+  classic: { 192:'icon-192-classic.png', 512:'icon-512-classic.png' },
+  v1:      { 192:'icon-192-v1.png',      512:'icon-512-v1.png' }
+};
 
 function applyScheme(scheme){
   const valid=['shell','classic','v1'];
@@ -358,8 +402,21 @@ function applyScheme(scheme){
   document.body.classList.toggle('theme-shell', s==='shell');
   document.body.classList.toggle('theme-classic', s==='classic');
   document.body.classList.toggle('theme-v1', s==='v1');
+
   const sel=document.getElementById('colorSchemeSelect');
   if(sel) sel.value=s;
+
+  document.querySelectorAll('.theme-preview-card').forEach(function(card){
+    card.classList.toggle('is-selected', card.dataset.scheme===s);
+  });
+
+  const icons=SCHEME_ICONS[s];
+  if(icons){
+    const favicon=document.getElementById('faviconLink');
+    const appleIcon=document.getElementById('appleIconLink');
+    if(favicon) favicon.setAttribute('href', icons[192]);
+    if(appleIcon) appleIcon.setAttribute('href', icons[192]);
+  }
 }
 
 function onSchemeChange(value){
@@ -371,6 +428,64 @@ function onSchemeChange(value){
   let saved='shell';
   try{ saved=localStorage.getItem(SCHEME_KEY)||'shell'; }catch(e){}
   applyScheme(saved);
+})();
+
+/* ---------- Language (English / Urdu / Roman Urdu) ---------- */
+const LANG_KEY='fuelDipLanguage';
+
+const I18N={
+  en:{
+    'nav.home':'Home', 'nav.tanks':'Tanks', 'nav.reports':'Reports', 'nav.chart':'Dip Chart', 'nav.settings':'Settings',
+    'tank.dipReading':'📏 Dip reading', 'tank.availableFuel':'⛽ Available Fuel', 'tank.note':'📝 Note (optional)',
+    'tank.save':'💾 Save reading', 'tank.copy':'📋 Copy Result', 'tank.clear':'✕ Clear',
+    'tank.reverseLookup':'🔄 Reverse Lookup — Litres → Dip', 'tank.enterLitres':'⛽ Enter litres', 'tank.estimatedDip':'📏 Estimated Dip',
+    'settings.title':'⚙️ App Settings', 'settings.colorScheme':'🎨 Color Scheme', 'settings.language':'🌐 Language',
+    'settings.pinLock':'🔒 PIN Lock', 'settings.about':'ℹ️ About Application'
+  },
+  ur:{
+    'nav.home':'ہوم', 'nav.tanks':'ٹینکس', 'nav.reports':'رپورٹس', 'nav.chart':'ڈپ چارٹ', 'nav.settings':'ترتیبات',
+    'tank.dipReading':'📏 ڈپ ریڈنگ', 'tank.availableFuel':'⛽ دستیاب فیول', 'tank.note':'📝 نوٹ (اختیاری)',
+    'tank.save':'💾 ریڈنگ محفوظ کریں', 'tank.copy':'📋 نتیجہ کاپی کریں', 'tank.clear':'✕ صاف کریں',
+    'tank.reverseLookup':'🔄 ریورس لُک اَپ — لیٹرز → ڈپ', 'tank.enterLitres':'⛽ لیٹرز درج کریں', 'tank.estimatedDip':'📏 تخمینی ڈپ',
+    'settings.title':'⚙️ ایپ کی ترتیبات', 'settings.colorScheme':'🎨 کلر تھیم', 'settings.language':'🌐 زبان',
+    'settings.pinLock':'🔒 پن لاک', 'settings.about':'ℹ️ ایپ کے بارے میں'
+  },
+  ru:{
+    'nav.home':'Home', 'nav.tanks':'Tanks', 'nav.reports':'Reports', 'nav.chart':'Dip Chart', 'nav.settings':'Settings',
+    'tank.dipReading':'📏 Dip Reading', 'tank.availableFuel':'⛽ Available Fuel', 'tank.note':'📝 Note (optional)',
+    'tank.save':'💾 Reading Save Karein', 'tank.copy':'📋 Result Copy Karein', 'tank.clear':'✕ Clear Karein',
+    'tank.reverseLookup':'🔄 Reverse Lookup — Litres → Dip', 'tank.enterLitres':'⛽ Litres Darj Karein', 'tank.estimatedDip':'📏 Takhmeeni Dip',
+    'settings.title':'⚙️ App Settings', 'settings.colorScheme':'🎨 Color Theme', 'settings.language':'🌐 Zabaan',
+    'settings.pinLock':'🔒 PIN Lock', 'settings.about':'ℹ️ App Ke Baare Mein'
+  }
+};
+
+function applyLanguage(lang){
+  const valid=['en','ur','ru'];
+  const l = valid.includes(lang) ? lang : 'en';
+  const dict = I18N[l];
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    const key=el.getAttribute('data-i18n');
+    if(dict[key]) el.textContent=dict[key];
+  });
+
+  document.documentElement.setAttribute('dir', l==='ur' ? 'rtl' : 'ltr');
+  document.body.classList.toggle('lang-urdu', l==='ur');
+
+  const sel=document.getElementById('languageSelect');
+  if(sel) sel.value=l;
+}
+
+function onLanguageChange(value){
+  applyLanguage(value);
+  try{ localStorage.setItem(LANG_KEY,value); }catch(e){}
+}
+
+(function initLanguage(){
+  let saved='en';
+  try{ saved=localStorage.getItem(LANG_KEY)||'en'; }catch(e){}
+  applyLanguage(saved);
 })();
 
 /* ---------- PIN Lock ---------- */
@@ -436,11 +551,18 @@ function openSettings(){
   document.getElementById('newPin').value='';
   document.getElementById('confirmPin').value='';
 
-  const schemeSel=document.getElementById('colorSchemeSelect');
-  if(schemeSel){
-    schemeSel.value = document.body.classList.contains('theme-v1') ? 'v1'
-      : document.body.classList.contains('theme-classic') ? 'classic'
-      : 'shell';
+  const currentScheme = document.body.classList.contains('theme-v1') ? 'v1'
+    : document.body.classList.contains('theme-classic') ? 'classic'
+    : 'shell';
+  document.querySelectorAll('.theme-preview-card').forEach(function(card){
+    card.classList.toggle('is-selected', card.dataset.scheme===currentScheme);
+  });
+
+  const langSel=document.getElementById('languageSelect');
+  if(langSel){
+    let savedLang='en';
+    try{ savedLang=localStorage.getItem(LANG_KEY)||'en'; }catch(e){}
+    langSel.value=savedLang;
   }
 
   modal.style.display='flex';
@@ -452,6 +574,18 @@ function closeSettings(){
 
 function closeSettingsOnBg(e){
   if(e.target.id==='settingsModal') closeSettings();
+}
+
+function openAbout(){
+  document.getElementById('aboutModal').style.display='flex';
+}
+
+function closeAbout(){
+  document.getElementById('aboutModal').style.display='none';
+}
+
+function closeAboutOnBg(e){
+  if(e.target.id==='aboutModal') closeAbout();
 }
 
 function updatePinSetupVisibility(){

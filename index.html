@@ -10,8 +10,8 @@
 <link rel="stylesheet" href="style.css">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#FFC72C">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png" id="faviconLink">
+<link rel="apple-touch-icon" href="icon-192.png" id="appleIconLink">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -59,25 +59,52 @@
 <div id="settingsModal" class="modal-overlay" style="display:none;" onclick="closeSettingsOnBg(event)">
   <div class="modal-card">
     <div class="modal-head">
-      <h2>⚙️ App Settings</h2>
+      <h2 data-i18n="settings.title">⚙️ App Settings</h2>
       <button type="button" class="modal-close" onclick="closeSettings()">✕</button>
+    </div>
+
+    <div class="modal-row modal-row-stack">
+      <div>
+        <div class="modal-row-title" data-i18n="settings.colorScheme">🎨 Color Scheme</div>
+        <div class="modal-row-sub">Tap a theme to preview &amp; apply it instantly</div>
+      </div>
+      <div class="theme-preview-grid" id="themePreviewGrid">
+        <button type="button" class="theme-preview-card" data-scheme="shell" onclick="onSchemeChange('shell')">
+          <span class="theme-preview-swatch theme-preview-shell">
+            <span class="theme-preview-check">✓</span>
+          </span>
+          <span class="theme-preview-name">🐚 Shell</span>
+        </button>
+        <button type="button" class="theme-preview-card" data-scheme="classic" onclick="onSchemeChange('classic')">
+          <span class="theme-preview-swatch theme-preview-classic">
+            <span class="theme-preview-check">✓</span>
+          </span>
+          <span class="theme-preview-name">🔵 Classic Blue</span>
+        </button>
+        <button type="button" class="theme-preview-card" data-scheme="v1" onclick="onSchemeChange('v1')">
+          <span class="theme-preview-swatch theme-preview-v1">
+            <span class="theme-preview-check">✓</span>
+          </span>
+          <span class="theme-preview-name">🌑 Premium Dark</span>
+        </button>
+      </div>
     </div>
 
     <div class="modal-row">
       <div>
-        <div class="modal-row-title">🎨 Color Scheme</div>
-        <div class="modal-row-sub">Choose the app's brand color theme</div>
+        <div class="modal-row-title" data-i18n="settings.language">🌐 Language</div>
+        <div class="modal-row-sub">App display language</div>
       </div>
-      <select id="colorSchemeSelect" class="scheme-select" onchange="onSchemeChange(this.value)">
-        <option value="shell">🐚 Shell (Yellow/Red)</option>
-        <option value="classic">🔵 Classic Blue (v23)</option>
-        <option value="v1">🌑 Premium Dark (v1)</option>
+      <select id="languageSelect" class="scheme-select" onchange="onLanguageChange(this.value)">
+        <option value="en">English</option>
+        <option value="ur">اردو (Urdu)</option>
+        <option value="ru">Roman Urdu</option>
       </select>
     </div>
 
     <div class="modal-row">
       <div>
-        <div class="modal-row-title">🔒 PIN Lock</div>
+        <div class="modal-row-title" data-i18n="settings.pinLock">🔒 PIN Lock</div>
         <div class="modal-row-sub">Require a PIN to open this app</div>
       </div>
       <label class="switch">
@@ -97,6 +124,94 @@
       </label>
       <div id="pinSetupMsg" class="pin-setup-msg"></div>
       <button type="button" class="save-btn" onclick="savePin()">Save PIN</button>
+    </div>
+
+    <button type="button" class="modal-row modal-row-link" onclick="closeSettings();openAbout();">
+      <div>
+        <div class="modal-row-title" data-i18n="settings.about">ℹ️ About Application</div>
+        <div class="modal-row-sub">Version, features &amp; developer info</div>
+      </div>
+      <span class="modal-row-chevron">›</span>
+    </button>
+  </div>
+</div>
+
+<!-- ===== ABOUT MODAL ===== -->
+<div class="modal-overlay" id="aboutModal" style="display:none;" onclick="closeAboutOnBg(event)">
+  <div class="modal-card about-card">
+    <div class="modal-head">
+      <h2>ℹ️ About Application</h2>
+      <button type="button" class="modal-close" onclick="closeAbout()">✕</button>
+    </div>
+
+    <div class="about-body">
+      <div class="about-hero">
+        <div class="about-app-name">Digital Fuel Dip Calculator</div>
+        <div class="about-app-version">Version: 29.0.1</div>
+      </div>
+
+      <p class="about-lead">A modern, accurate, and user-friendly fuel tank dip calculator designed specifically for petrol pumps. The application converts manual dip readings into accurate fuel volume using calibrated dip charts with automatic interpolation.</p>
+
+      <hr class="about-divider">
+
+      <h3 class="about-heading">Key Features</h3>
+      <ul class="about-list">
+        <li>Accurate Fuel Volume Calculation</li>
+        <li>Reverse Calculator (Liters → Dip)</li>
+        <li>Multiple Tank Support</li>
+        <li>Professional Fuel Gauge</li>
+        <li>Calculation History</li>
+        <li>Offline Ready (PWA)</li>
+        <li>Secure PIN Protection</li>
+        <li>Multiple Color Themes</li>
+        <li>Fast &amp; Responsive Interface</li>
+        <li>Manual Calibration Chart Support</li>
+      </ul>
+
+      <hr class="about-divider">
+
+      <h3 class="about-heading">Accuracy Notice</h3>
+      <p class="about-text">All calculations are generated using the calibration chart imported into the application. Results are linearly interpolated between chart values. Users should verify critical inventory measurements according to their organization's operating procedures before dispatch or reconciliation.</p>
+
+      <hr class="about-divider">
+
+      <h3 class="about-heading">Supported Units</h3>
+      <ul class="about-list">
+        <li>Dip: Millimeters (mm)</li>
+        <li>Volume: Liters (L)</li>
+      </ul>
+
+      <hr class="about-divider">
+
+      <h3 class="about-heading">Developed By</h3>
+      <p class="about-text">
+        <strong>WaQaR Ali</strong><br>
+        Founder &amp; Developer<br>
+        Digital Solutions
+      </p>
+
+      <hr class="about-divider">
+
+      <h3 class="about-heading">Contact Information</h3>
+      <p class="about-text">📱 WhatsApp: <a class="about-link" href="https://api.whatsapp.com/send?phone=923009630013" target="_blank" rel="noopener">+92-300-9630013</a></p>
+      <p class="about-text">For technical support, feature requests, bug reports, or business inquiries, please contact us through WhatsApp.</p>
+
+      <hr class="about-divider">
+
+      <h3 class="about-heading">Copyright</h3>
+      <p class="about-text">© 2026 Digital Solutions<br>All Rights Reserved.</p>
+      <p class="about-text">This application, including its design, source code, calculation logic, graphics, and documentation, is protected by copyright laws. Unauthorized copying, modification, redistribution, reverse engineering, or commercial resale without written permission is prohibited.</p>
+
+      <hr class="about-divider">
+
+      <h3 class="about-heading">Disclaimer</h3>
+      <p class="about-text">This application is intended to assist fuel station operators in calculating fuel volume from calibrated dip charts. The developer is not responsible for losses resulting from incorrect calibration charts, incorrect dip measurements, or improper operational use.</p>
+
+      <hr class="about-divider">
+
+      <h3 class="about-heading">Thank You</h3>
+      <p class="about-text">Thank you for choosing Digital Fuel Dip Calculator.</p>
+      <p class="about-text">We are committed to continuously improving the application by adding new features, enhancing performance, and providing reliable support for the petroleum industry.</p>
     </div>
   </div>
 </div>
@@ -130,25 +245,26 @@
   <footer class="site-foot">
     <span>Results are based on the uploaded calibration chart. Always verify before final fuel dispatch.</span>
 
-    <div class="dev-panel">
-      <div class="dev-brand">
-        <span class="dev-role">👨‍💻 Developed &amp; Maintained By</span>
+    <div class="dev-panel dev-panel-v2">
+      <div class="dev-header">
+        <span class="dev-avatar">👨‍💻</span>
+        <div class="dev-header-text">
+          <div class="dev-role">Developed by</div>
+          <div class="dev-name">Digital Solutions Rahim Yar Khan</div>
+        </div>
       </div>
 
-      <div class="dev-name">WaQaR Ali</div>
-      <div class="dev-company">Digital Solutions</div>
-
-      <div class="dev-contact">
-        <a href="mailto:Digitalsolution.ryk@gmail.com" class="dev-link">
-          📧 Email: Digitalsolution.ryk@gmail.com
+      <div class="dev-chips">
+        <a href="https://api.whatsapp.com/send?phone=923009630013&text=Hello%21%20I%20am%20interested%20in%20the%20Fuel%20Tank%20Dip%20Calculator%20App.%20Please%20share%20more%20details." class="dev-chip dev-chip-whatsapp" target="_blank" rel="noopener">
+          📱 WhatsApp : +92-300-9630013
         </a>
-        <a href="https://api.whatsapp.com/send?phone=923009630013&text=Hello%21%20I%20am%20interested%20in%20the%20Fuel%20Tank%20Dip%20Calculator%20App.%20Please%20share%20more%20details." class="dev-link dev-link-whatsapp" target="_blank" rel="noopener">
-          📱 WhatsApp: +92 300 9630013
+        <a href="mailto:Digitalsolution.ryk@gmail.com" class="dev-chip">
+          ✉ Gmail : Digitalsolution.ryk@gmail.com
         </a>
       </div>
 
       <div class="dev-meta">
-        <div class="dev-version">🌐 Version: v2.0</div>
+        <div class="dev-version">App Version : 4.29</div>
         <div class="dev-copyright">© 2026 All Rights Reserved</div>
       </div>
     </div>
@@ -176,7 +292,7 @@
 
         <div class="tank-controls">
           <label class="field">
-            <span class="field-label">📏 Dip reading</span>
+            <span class="field-label" data-i18n="tank.dipReading">📏 Dip reading</span>
             <span class="field-input-wrap">
               <span class="field-icon">📏</span>
               <input id="t50" inputmode="decimal" autocomplete="off" placeholder="Enter dip in mm" oninput="calc('t50',tank50,'r50')">
@@ -187,7 +303,7 @@
           <div class="readout" id="readout50">
             <div class="readout-top">
               <span class="readout-check">✅</span>
-              <span class="readout-label">⛽ Available Fuel</span>
+              <span class="readout-label" data-i18n="tank.availableFuel">⛽ Available Fuel</span>
             </div>
             <div id="r50" class="readout-value">0.00 L</div>
             <div class="readout-meta">
@@ -197,23 +313,23 @@
           </div>
 
           <label class="field">
-            <span class="field-label">📝 Note (optional)</span>
+            <span class="field-label" data-i18n="tank.note">📝 Note (optional)</span>
             <span class="field-input-wrap">
               <input id="note50" class="note-input" type="text" autocomplete="off" placeholder="e.g. Before dispatch, Morning check" maxlength="120">
             </span>
           </label>
 
           <div class="btn-row">
-            <button type="button" class="save-btn" onclick="saveReading('t50','50-KL')">💾 Save reading</button>
-            <button type="button" class="copy-btn" id="copyBtn50" onclick="copyResult('t50','r50','note50','copyBtn50','50-KL')">📋 Copy Result</button>
-            <button type="button" class="clear-btn" onclick="clearInput('t50',tank50,'r50')">✕ Clear</button>
+            <button type="button" class="save-btn" onclick="saveReading('t50','50-KL')"><span data-i18n="tank.save">💾 Save reading</span></button>
+            <button type="button" class="copy-btn" id="copyBtn50" onclick="copyResult('t50','r50','note50','copyBtn50','50-KL')"><span data-i18n="tank.copy">📋 Copy Result</span></button>
+            <button type="button" class="clear-btn" onclick="clearInput('t50',tank50,'r50')"><span data-i18n="tank.clear">✕ Clear</span></button>
           </div>
 
-          <div class="reverse-divider"><span>🔄 Reverse Lookup — Litres → Dip</span></div>
+          <div class="reverse-divider"><span data-i18n="tank.reverseLookup">🔄 Reverse Lookup — Litres → Dip</span></div>
 
           <div class="reverse-row">
             <label class="field">
-              <span class="field-label">⛽ Enter litres</span>
+              <span class="field-label" data-i18n="tank.enterLitres">⛽ Enter litres</span>
               <span class="field-input-wrap">
                 <span class="field-icon">⛽</span>
                 <input id="t50_ltr" inputmode="decimal" autocomplete="off" placeholder="e.g. 20000" oninput="reverseCalc('t50_ltr',tank50,'r50_ltr','readout50_ltr')">
@@ -224,7 +340,7 @@
             <div class="readout readout-reverse" id="readout50_ltr">
               <div class="readout-top">
                 <span class="readout-check">✅</span>
-                <span class="readout-label">📏 Estimated Dip</span>
+                <span class="readout-label" data-i18n="tank.estimatedDip">📏 Estimated Dip</span>
               </div>
               <div id="r50_ltr" class="readout-value">0.0 mm</div>
             </div>
@@ -249,7 +365,7 @@
 
         <div class="tank-controls">
           <label class="field">
-            <span class="field-label">📏 Dip reading</span>
+            <span class="field-label" data-i18n="tank.dipReading">📏 Dip reading</span>
             <span class="field-input-wrap">
               <span class="field-icon">📏</span>
               <input id="t25" inputmode="decimal" autocomplete="off" placeholder="Enter dip in mm" oninput="calc('t25',tank25,'r25')">
@@ -260,7 +376,7 @@
           <div class="readout" id="readout25">
             <div class="readout-top">
               <span class="readout-check">✅</span>
-              <span class="readout-label">⛽ Available Fuel</span>
+              <span class="readout-label" data-i18n="tank.availableFuel">⛽ Available Fuel</span>
             </div>
             <div id="r25" class="readout-value">0.00 L</div>
             <div class="readout-meta">
@@ -270,23 +386,23 @@
           </div>
 
           <label class="field">
-            <span class="field-label">📝 Note (optional)</span>
+            <span class="field-label" data-i18n="tank.note">📝 Note (optional)</span>
             <span class="field-input-wrap">
               <input id="note25" class="note-input" type="text" autocomplete="off" placeholder="e.g. Before dispatch, Morning check" maxlength="120">
             </span>
           </label>
 
           <div class="btn-row">
-            <button type="button" class="save-btn" onclick="saveReading('t25','25-KL')">💾 Save reading</button>
-            <button type="button" class="copy-btn" id="copyBtn25" onclick="copyResult('t25','r25','note25','copyBtn25','25-KL')">📋 Copy Result</button>
-            <button type="button" class="clear-btn" onclick="clearInput('t25',tank25,'r25')">✕ Clear</button>
+            <button type="button" class="save-btn" onclick="saveReading('t25','25-KL')"><span data-i18n="tank.save">💾 Save reading</span></button>
+            <button type="button" class="copy-btn" id="copyBtn25" onclick="copyResult('t25','r25','note25','copyBtn25','25-KL')"><span data-i18n="tank.copy">📋 Copy Result</span></button>
+            <button type="button" class="clear-btn" onclick="clearInput('t25',tank25,'r25')"><span data-i18n="tank.clear">✕ Clear</span></button>
           </div>
 
-          <div class="reverse-divider"><span>🔄 Reverse Lookup — Litres → Dip</span></div>
+          <div class="reverse-divider"><span data-i18n="tank.reverseLookup">🔄 Reverse Lookup — Litres → Dip</span></div>
 
           <div class="reverse-row">
             <label class="field">
-              <span class="field-label">⛽ Enter litres</span>
+              <span class="field-label" data-i18n="tank.enterLitres">⛽ Enter litres</span>
               <span class="field-input-wrap">
                 <span class="field-icon">⛽</span>
                 <input id="t25_ltr" inputmode="decimal" autocomplete="off" placeholder="e.g. 10400" oninput="reverseCalc('t25_ltr',tank25,'r25_ltr','readout25_ltr')">
@@ -297,7 +413,7 @@
             <div class="readout readout-reverse" id="readout25_ltr">
               <div class="readout-top">
                 <span class="readout-check">✅</span>
-                <span class="readout-label">📏 Estimated Dip</span>
+                <span class="readout-label" data-i18n="tank.estimatedDip">📏 Estimated Dip</span>
               </div>
               <div id="r25_ltr" class="readout-value">0.0 mm</div>
             </div>
@@ -363,19 +479,19 @@
 <!-- ===== BOTTOM NAV (mobile) ===== -->
 <nav class="bottom-nav" id="bottomNav" aria-label="Section navigation">
   <button type="button" class="nav-item is-active" data-nav="navHome" onclick="showPanel('navHome')">
-    <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+    <span class="nav-icon">🏠</span><span class="nav-label" data-i18n="nav.home">Home</span>
   </button>
   <button type="button" class="nav-item" data-nav="navTanks" onclick="showPanel('navTanks')">
-    <span class="nav-icon">🛢</span><span class="nav-label">Tanks</span>
+    <span class="nav-icon">🛢</span><span class="nav-label" data-i18n="nav.tanks">Tanks</span>
   </button>
   <button type="button" class="nav-item" data-nav="navReports" onclick="showPanel('navReports')">
-    <span class="nav-icon">📊</span><span class="nav-label">Reports</span>
+    <span class="nav-icon">📊</span><span class="nav-label" data-i18n="nav.reports">Reports</span>
   </button>
   <button type="button" class="nav-item" data-nav="navChart" onclick="showPanel('navChart')">
-    <span class="nav-icon">📋</span><span class="nav-label">Dip Chart</span>
+    <span class="nav-icon">📋</span><span class="nav-label" data-i18n="nav.chart">Dip Chart</span>
   </button>
   <button type="button" class="nav-item nav-item-btn" onclick="openSettings()">
-    <span class="nav-icon">⚙️</span><span class="nav-label">Settings</span>
+    <span class="nav-icon">⚙️</span><span class="nav-label" data-i18n="nav.settings">Settings</span>
   </button>
 </nav>
 
